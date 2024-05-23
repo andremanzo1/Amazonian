@@ -1,0 +1,14 @@
+<%-  include("partials/head.ejs")    %>
+  <body>
+     <%-  include("partials/navAdminSide.ejs")    %>
+    <h1>List of Products</h1>
+
+    <% for (let i of productList) {%>
+      <a href="/updateProduct?ProductID= <%= i.ProductID%>"> Update </a>
+      <br>
+      <%= i.Name%><br> Description:<%=i.Description%> <br>Price:<%= i.Price%> <br>Quantity:<%= i.QuantityAvailable %> <br>Category:<%= i.Category%><br> Supplier:<%=i.Supplier%> <br><img class = "img" src = "<%= i.Image %>" alt = "productimage"> <br><a href="/DeleteProduct?ProductID= <%= i.ProductID%>"> Delete Product </a><br><br>
+      <%} %>
+        <br>
+      <!-- Your content goes here -->
+  </body>
+  </html>

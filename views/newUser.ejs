@@ -1,0 +1,72 @@
+    <%-  include("partials/head.ejs")    %>
+    <body>
+        <h1 id = "createtitle">Create Account</h1>
+
+
+
+
+      <form action="/CreateAccount" method="POST" autocomplete="off"id = "createtitle">
+        User Name:
+        <input name="UserName" type="text">
+        <span id="error"></span>
+        <br>
+
+        First Name:
+        <input name="FirstName" type="text">
+        <span id="error2"></span>
+        <br>
+
+        Last Name:
+        <input name="LastName" type="text">
+        <span id="error3"></span>
+        <br>
+
+        Email:
+        <input name="Email" type="text">
+        <span id="error4"></span>
+        <br>
+
+        Password:
+        <input name="Password" type="text">
+        <span id="error5"></span>
+        <br>
+
+        Address:
+        <input name="Address" type="text">
+        <span id="error6"></span>
+        <br>
+
+        City:
+        <input name="City" type="text">
+        <span id="error7"></span>
+        <br>
+
+        State:
+        <select name="State" id="state"></select>
+        <span id="error8"></span>
+        <br>
+
+        ZipCode:
+        <input name="ZipCode" type="text">
+        <span id="error9"></span>
+        <br>
+
+        Country:
+        <input name = "Country" type="text">
+        <span id="error10"></span>
+        <br>
+
+        Phone:
+        <input name="Phone" type="text">
+        <span id="error11"></span>
+        <br>
+
+
+        <button>Create Account</button>
+
+      </form>
+
+      <script src="/js/createAccount.js"></script>
+
+    </body>
+    </html>

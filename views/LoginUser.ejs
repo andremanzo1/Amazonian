@@ -1,0 +1,23 @@
+<%- include("partials/head.ejs") %>
+
+<body id="bg">
+  <br><br><br>
+    <h1 class="text-center mb-4">Login to Account</h1>
+
+  <div class="text-center">
+  <form action="/Login" method="POST" autocomplete="off">
+    Username:
+    <input name="UserName" type="text">
+    <br><br>
+
+    Password:
+    <input name="Password" type="password">
+    <br><br>
+
+    <button class="btn btn-outline-success">Login</button>
+  </div>
+
+  </form>
+
+</body>
+</html>
