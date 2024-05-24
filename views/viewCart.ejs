@@ -20,6 +20,7 @@
               <td><%= item.Description %></td>
               <td>$<%= item.Price %></td>
               <td><%= item.Quantity %></td>
+              <td ><a class="btn btn-danger" href="/DeleteProductInCart?ProductID=<%= item.ProductID%>">Delete</a></td>
             </tr>
             <% }); %>
         </tbody>

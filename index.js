@@ -1,17 +1,20 @@
 const express = require("express");
 const mysql = require("mysql");
 const app = express();
-const pool = dbConnection();
 const session = require("express-session");
+const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
-
+const pool = dbConnection();
+const sessionStore = new MySQLStore({}, pool);
 app.set("trust proxy", 1); // trust first proxy
+
 app.use(
   session({
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true },
+    store: sessionStore,
+    cookie: { secure: false },
   }),
 );
 
@@ -32,7 +35,7 @@ app.get("/logout", (req, res) => {
 
 //Userhome
 app.get("/UserHome", (req, res) => {
-  let username = req.session.username;
+  let username = req.session.UserName;
   res.render("Userhome", { username: username });
 });
 
@@ -178,8 +181,8 @@ app.post("/Login", async (req, res) => {
       const passwordMatch = await bcrypt.compare(Password, hashedPassword);
 
       if (passwordMatch) {
-        req.session.customerID = result[0].CustomerID;
-        req.session.username = result[0].UserName;
+        req.session.CustomerID = result[0].CustomerID;
+        req.session.UserName = result[0].UserName;
         // If passwords match, the user is authenticated
         if (result[0].IsAdmin === 1) {
           // If user is admin, render the AdminHome page
@@ -267,8 +270,8 @@ app.post("/CreateAccount", async (req, res) => {
 
     let result = await executeSQL(query, params);
     // If the account is successfully created, render the Userhome view
-    req.session.customerID = result.insertId;
-    req.session.username = UserName;
+    req.session.CustomerID = result.insertId;
+    req.session.UserName = UserName;
     res.redirect("/UserHome?username=" + encodeURIComponent(UserName));
   } catch (error) {
     if (error.code === "ER_DUP_ENTRY") {
@@ -285,7 +288,7 @@ app.get("/viewProducts", async (req, res) => {
 });
 
 app.get("/viewCart", async (req, res) => {
-  let customerID = req.session.customerID;
+  let customerID = req.session.CustomerID;
   let sql = `SELECT Products.Name, Products.Description, Products.Price, ShoppingCart.Quantity, Products.ProductID
              FROM ShoppingCart
              JOIN Products ON ShoppingCart.ProductID = Products.ProductID
@@ -293,9 +296,20 @@ app.get("/viewCart", async (req, res) => {
   let rows = await executeSQL(sql, [customerID]);
   res.render("viewCart", { cartItems: rows });
 });
+//delete product from cart
+app.get("/DeleteProductInCart", async (req, res) => {
+  let customerID = req.session.CustomerID;
+  let ProductID = req.query.ProductID;
+  let sql = `DELETE FROM ShoppingCart WHERE CustomerID = ? AND ProductID = ?`;
+  
+
+  let params = [customerID, ProductID];
+  let rows = await executeSQL(sql, params);
+  res.redirect("/viewCart");
+});
 
 app.post("/addToCart", async (req, res) => {
-  let customerID = req.session.customerID;
+  let customerID = req.session.CustomerID;
   let productID = req.body.ProductID;
   let quantity = parseInt(req.body.Quantity);
   let productSql = `SELECT QuantityAvailable
@@ -305,10 +319,10 @@ app.post("/addToCart", async (req, res) => {
 
   if (product.length > 0 && product[0].QuantityAvailable >= quantity) {
     let newQuantity = product[0].QuantityAvailable - quantity;
-    let updateProductSql = `UPDATE Products
-                            SET QuantityAvailable = ?
+      let updateProductSql = `UPDATE Products
+                              SET QuantityAvailable = ?
                             WHERE ProductID = ?`;
-    await executeSQL(updateProductSql, [newQuantity, productID]);
+      await executeSQL(updateProductSql, [newQuantity, productID]);
     let checkCartSql = `SELECT *
                         FROM ShoppingCart
                         WHERE CustomerID = ?
@@ -331,7 +345,7 @@ app.post("/addToCart", async (req, res) => {
 });
 
 app.post("/checkout", async (req, res) => {
-  let customerID = req.session.customerID;
+  let customerID = req.session.CustomerID;
   let sql = `DELETE 
              FROM ShoppingCart 
              WHERE CustomerID = ?`;
