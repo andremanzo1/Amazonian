@@ -11,19 +11,19 @@ async function displayRandomBackground() {
 }
 displayRandomBackground();
 
+ 
 async function populateStates() {
-  let url = "https://csumb.space/api/allStatesAPI.php"
-  let statesResponse = await fetch(url);
-  let statesData = await statesResponse.json();
-
+    let url = '/States/US';
+    let response = await fetch(url);
+    let statesData = await response.json();
   for (let s of statesData) {
     let option = document.createElement("option");
-    option.id = s.id;
-    option.value = s.usps;
-    console.log(s.usps);
-    option.textContent = s.usps;
+    option.state_name = s.state_name;
+    option.value = s.state_name;
+    console.log(s.state_name);
+    option.textContent = s.state_name;
     document.querySelector("#state").appendChild(option);
-  }
+    }
 }
 populateStates();
 

@@ -1,4 +1,5 @@
 const express = require("express");
+const unirest = require('unirest');
 const mysql = require("mysql");
 const app = express();
 const session = require("express-session");
@@ -211,6 +212,21 @@ app.get("/CreateAccount", async (req, res) => {
   res.render("newUser");
 });
 
+// states api to fill drop down menu
+app.get("/States/US", async (req, res) => {
+   const US = unirest( "GET","https://www.universal-tutorial.com/api/states/United States");
+  
+  US.headers({
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJhbm1hbnpvQGNzdW1iLmVkdSIsImFwaV90b2tlbiI6Ikk3VVhVWWl1UHQ5c3BTWFZCR3BvZHdJQmhLd0JrUHRuZGZYQ0M1MFBQc1RhNFE2XzBhTkM4YWpBWkI4dC1rcXNXQjgifSwiZXhwIjoxNzE2NzcwNjUwfQ.tBV5mV2ndhNrXJhtBWgLM8QI4vt01OmwJCUpk3A5PLM",
+      "Accept": "application/json"
+  })
+  US.end(response => {
+    res.json(response.body);
+  });
+ 
+   
+ 
+});
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;
@@ -301,8 +317,6 @@ app.get("/DeleteProductInCart", async (req, res) => {
   let customerID = req.session.CustomerID;
   let ProductID = req.query.ProductID;
   let sql = `DELETE FROM ShoppingCart WHERE CustomerID = ? AND ProductID = ?`;
-  
-
   let params = [customerID, ProductID];
   let rows = await executeSQL(sql, params);
   res.redirect("/viewCart");
