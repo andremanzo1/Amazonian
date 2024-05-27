@@ -222,8 +222,8 @@ app.get("/States/US", async (req, res) => {
   })
   US.end(response => {
     res.json(response.body);
+    console.log(response.body);
   });
- 
    
  
 });
@@ -237,7 +237,6 @@ app.post("/CreateAccount", async (req, res) => {
   let City = req.body.City;
   let State = req.body.State;
   let ZipCode = req.body.ZipCode;
-  let Country = req.body.Country;
   let Phone = req.body.Phone;
 
   if (
@@ -250,7 +249,6 @@ app.post("/CreateAccount", async (req, res) => {
     !City ||
     !State ||
     !ZipCode ||
-    !Country ||
     !Phone
   ) {
     // If any required field is missing, redirect back to create account page

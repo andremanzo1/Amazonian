@@ -149,21 +149,9 @@ function validation(event) {
         error = true;
       }
     }
-
-    if (!country) {
-      document.querySelector("#error10").innerHTML = "Please enter your country"
-      document.querySelector("#error10").style.color = "red"
-      error = true;
-    } else {
-      if (country.length > 100) {
-        document.querySelector("#error10").innerHTML = "Your country is too long"
-        document.querySelector("#error10").style.color = "red"
-        error = true;
-      }
-    }
-
+  
     if (!phone) {
-      document.querySelector("#error11").innerHTML = "Please enter your country"
+      document.querySelector("#error11").innerHTML = "Please enter your phone number"
       document.querySelector("#error11").style.color = "red"
       error = true;
     } else {
