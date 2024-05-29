@@ -1,10 +1,12 @@
 const express = require("express");
 const unirest = require('unirest');
+const axios = require('axios');
 const mysql = require("mysql");
 const app = express();
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
+const { error } = require("console");
 const pool = dbConnection();
 const sessionStore = new MySQLStore({}, pool);
 app.set("trust proxy", 1); // trust first proxy
@@ -213,10 +215,63 @@ app.get("/CreateAccount", async (req, res) => {
 });
 
 // states api to fill drop down menu
+let token = '';
+let tokenExpiration = new Date('2024-05-27T00:44:10.000Z'); // Initial token expiration time
+
+// Function to get a new token
+async function getNewToken() {
+  try {
+    const response = await axios.get('https://www.universal-tutorial.com/api/getaccesstoken', {
+      headers: {
+        "Accept": "application/json",
+        "api-token": "jfzZJiO3tZ5Mb5U6NCgHS3plzESq6XIwBeFcy8qXAWk2ROMELDhZc0adec8mcJmayew",
+        "user-email": "drecollege1@gmail.com"
+      }
+    });
+    token = response.data.auth_token;
+    tokenExpiration = new Date(Date.now() + response.data.expires_in * 1000); // Update expiration time
+    console.log('New token acquired:', token);
+  } catch (error) {
+    console.error('Error fetching new token:', error.response ? error.response.data : error.message);
+    throw new Error('Unable to acquire new token');
+  }
+}
+
+// Middleware to check and refresh the token if needed
+async function checkToken(req, res, next) {
+  try {
+    if (!token || Date.now() > tokenExpiration.getTime()) {
+      await getNewToken();
+    }
+    next();
+  } catch (error) {
+    res.status(500).send('Error refreshing token');
+  }
+}
+
+app.use(checkToken);
+
+app.get("/States/US", async (req, res) => {
+  const US = unirest("GET", "https://www.universal-tutorial.com/api/states/United States");
+  US.headers({
+    "Authorization": `Bearer ${token}`,
+    "Accept": "application/json"
+  });
+  US.end(response => {
+    if (response.error) {
+      console.error('Error fetching states:', response.error);
+      return res.status(500).send('Error fetching states');
+    }
+    res.json(response.body);
+    console.log(response.body);
+  });
+});
+
+/*
+
 app.get("/States/US", async (req, res) => {
    const US = unirest( "GET","https://www.universal-tutorial.com/api/states/United States");
-  
-  US.headers({
+    US.headers({
     "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJhbm1hbnpvQGNzdW1iLmVkdSIsImFwaV90b2tlbiI6Ikk3VVhVWWl1UHQ5c3BTWFZCR3BvZHdJQmhLd0JrUHRuZGZYQ0M1MFBQc1RhNFE2XzBhTkM4YWpBWkI4dC1rcXNXQjgifSwiZXhwIjoxNzE2NzcwNjUwfQ.tBV5mV2ndhNrXJhtBWgLM8QI4vt01OmwJCUpk3A5PLM",
       "Accept": "application/json"
   })
@@ -227,6 +282,10 @@ app.get("/States/US", async (req, res) => {
    
  
 });
+*/ 
+
+ 
+
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;
