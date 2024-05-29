@@ -325,7 +325,7 @@ app.post("/CreateAccount", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(Password, 10);
-    let query = `INSERT INTO Customers (UserName, FirstName, LastName, Email, Password, Address, City, State, ZipCode, Country, Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    let query = `INSERT INTO Customers (UserName, FirstName, LastName, Email, Password, Address, City, State, ZipCode, Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     let params = [
       UserName,
@@ -337,7 +337,6 @@ app.post("/CreateAccount", async (req, res) => {
       City,
       State,
       ZipCode,
-      Country,
       Phone,
     ];
 

@@ -16,14 +16,26 @@ async function populateStates() {
     let url = '/States/US';
     let response = await fetch(url);
     let statesData = await response.json();
+ // for (let s of statesData) {
+ //   let option = document.createElement("option");
+  //  option.state_name = s.state_name;
+  //  option.value = s.state_name;
+  //  console.log(s.state_name);
+  //  option.textContent = s.state_name;
+  //  document.querySelector("#state").appendChild(option);
+   // }
+  let myParent = document.querySelector("#state");
+   var selectList = document.createElement("option");
+   selectList.text = "Select State";
+   myParent.appendChild(selectList);
   for (let s of statesData) {
-    let option = document.createElement("option");
-    option.state_name = s.state_name;
-    option.value = s.state_name;
-    console.log(s.state_name);
-    option.textContent = s.state_name;
-    document.querySelector("#state").appendChild(option);
-    }
+    
+    let opt = document.createElement("option");
+    opt.value = s.state_name;
+    opt.textContent = s.state_name;
+    document.querySelector("#state").appendChild(opt);
+      
+  }
 }
 populateStates();
 
