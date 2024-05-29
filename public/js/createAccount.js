@@ -38,7 +38,6 @@ function validation(event) {
     let city = document.querySelector("input[name=City]").value
     let state = document.querySelector("#state").value
     let zip = document.querySelector("input[name=ZipCode]").value
-    let country = document.querySelector("input[name=Country]").value
     let phone = document.querySelector("input[name=Phone]").value
     error = false;
 
