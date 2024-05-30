@@ -214,7 +214,7 @@ app.get("/CreateAccount", async (req, res) => {
   res.render("newUser");
 });
 
-// states api to fill drop down menu
+// record of date and time
 let token = '';
 let tokenExpiration = new Date('2024-05-27T00:44:10.000Z'); // Initial token expiration time
 
@@ -250,7 +250,7 @@ async function checkToken(req, res, next) {
 }
 
 app.use(checkToken);
-
+// fills dropdown with states
 app.get("/States/US", async (req, res) => {
   const US = unirest("GET", "https://www.universal-tutorial.com/api/states/United States");
   US.headers({
@@ -266,26 +266,6 @@ app.get("/States/US", async (req, res) => {
     console.log(response.body);
   });
 });
-
-/*
-
-app.get("/States/US", async (req, res) => {
-   const US = unirest( "GET","https://www.universal-tutorial.com/api/states/United States");
-    US.headers({
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJhbm1hbnpvQGNzdW1iLmVkdSIsImFwaV90b2tlbiI6Ikk3VVhVWWl1UHQ5c3BTWFZCR3BvZHdJQmhLd0JrUHRuZGZYQ0M1MFBQc1RhNFE2XzBhTkM4YWpBWkI4dC1rcXNXQjgifSwiZXhwIjoxNzE2NzcwNjUwfQ.tBV5mV2ndhNrXJhtBWgLM8QI4vt01OmwJCUpk3A5PLM",
-      "Accept": "application/json"
-  })
-  US.end(response => {
-    res.json(response.body);
-    console.log(response.body);
-  });
-   
- 
-});
-*/ 
-
- 
-
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;

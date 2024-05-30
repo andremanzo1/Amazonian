@@ -1,5 +1,5 @@
 document.querySelector("form").addEventListener("submit", validation)
-document.querySelector("#state").addEventListener("click", populateStates)
+document.querySelector("#state").addEventListener("change", populateStates)
 
 async function displayRandomBackground() {
   let url = `https://api.unsplash.com/photos/random/?client_id=UmG_IJB6rHWGjQYr8-DsaDQlUDAUQImkoxT218vZ5mY&featured=true&query=rainforest&orientation=landscape`
@@ -10,31 +10,25 @@ async function displayRandomBackground() {
   body.style.color = "white";
 }
 displayRandomBackground();
-
- 
+// to populate the states in dropdown bar
+let statesPopulated = false;
 async function populateStates() {
-    let url = '/States/US';
-    let response = await fetch(url);
-    let statesData = await response.json();
- // for (let s of statesData) {
- //   let option = document.createElement("option");
-  //  option.state_name = s.state_name;
-  //  option.value = s.state_name;
-  //  console.log(s.state_name);
-  //  option.textContent = s.state_name;
-  //  document.querySelector("#state").appendChild(option);
-   // }
-  let myParent = document.querySelector("#state");
-   var selectList = document.createElement("option");
-   selectList.text = "Select State";
-   myParent.appendChild(selectList);
+  if (statesPopulated) return;
+  statesPopulated = true;
+  let url = "/States/US"
+  let statesResponse = await fetch(url);
+  let statesData = await statesResponse.json();
+  document.querySelector("#state").innerHTML += `<option value="">select state</option>`;
   for (let s of statesData) {
-    
-    let opt = document.createElement("option");
-    opt.value = s.state_name;
-    opt.textContent = s.state_name;
-    document.querySelector("#state").appendChild(opt);
-      
+    let option = document.createElement("option");
+    option.id = s.state_name;
+    option.value = s.state_name;
+    option.textContent = s.state_name;
+    // removes places that are not states
+    if(s.state_name == "Ramey" || s.state_name == "Trimble" || s.state_name == "Sublimity" || s.state_name == "Ontario" || s.state_name == "District of Columbia"){
+      option.style.display = "none";
+    }
+    document.querySelector("#state").appendChild(option);
   }
 }
 populateStates();
