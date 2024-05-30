@@ -63,109 +63,140 @@ function validation(event) {
       document.querySelector("#error2").innerHTML = "Please enter your first name"
       document.querySelector("#error2").style.color = "red"
       error = true;
-    } else {
-      if (fname.length > 50) {
+    } else if (fname.length > 50) {
         document.querySelector("#error2").innerHTML = "Your first name is too long"
         document.querySelector("#error2").style.color = "red"
         error = true;
+      }else{
+      document.querySelector("#error2").innerHTML = "";
+      error = true;
       }
-    }
+    
 
     if (!lname) {
       document.querySelector("#error3").innerHTML = "Please enter your last name"
       document.querySelector("#error3").style.color = "red"
       error = true;
-    } else {
-      if (lname.length > 50) {
+    } else if (lname.length > 50) {
         document.querySelector("#error3").innerHTML = "Your last name is too long"
         document.querySelector("#error3").style.color = "red"
         error = true;
+      }else{
+        document.querySelector("#error3").innerHTML = "";
+        error = true;
       }
-    }
-
+    
+    // come back to this 
     if (!email) {
+      
       document.querySelector("#error4").innerHTML = "Please enter your email"
       document.querySelector("#error4").style.color = "red"
       error = true;
-    } else {
-      if (email.length > 100) {
+    } else if (email.length > 100) {
         document.querySelector("#error4").innerHTML = "Your email is too long"
         document.querySelector("#error4").style.color = "red"
         error = true;
+      }else if(email){
+        let emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        if (!emailRegex.test(email)) {
+          document.querySelector("#error4").innerHTML = "Please enter a valid email"
+          document.querySelector("#error4").style.color = "red"
+          error = true;
+        }else{
+        document.querySelector("#error4").innerHTML = "";
+        error = true;
       }
-    }
+      }
+    
+    
 
     if (!pass) {
       document.querySelector("#error5").innerHTML = "Please enter a password"
       document.querySelector("#error5").style.color = "red"
       error = true;
-    } else {
-      if (pass.length > 100) {
-        document.querySelector("#error5").innerHTML = "Your password is too long"
+    } else if (pass.length > 16) {
+        document.querySelector("#error5").innerHTML = "Your password is too long, only 14 or 16 characters allowed"
         document.querySelector("#error5").style.color = "red"
         error = true;
+      }else if(pass.length < 14){
+      document.querySelector("#error5").innerHTML = "Your password is too short, only 14 or 16 characteers allowed"
+      document.querySelector("#error5").style.color = "red"
+      error = true;
+      }else{
+        document.querySelector("#error5").innerHTML = "";
+        error = true;
       }
-    }
+    
 
     if (!address) {
       document.querySelector("#error6").innerHTML = "Please enter your address"
       document.querySelector("#error6").style.color = "red"
       error = true;
-    } else {
-      if (address.length > 255) {
+    } else if (address.length > 255) {
         document.querySelector("#error6").innerHTML = "Your address is too long"
         document.querySelector("#error6").style.color = "red"
         error = true;
+      }else{
+        document.querySelector("#error6").innerHTML = "";
+        error = true;
       }
-    }
+    
 
     if (!city) {
       document.querySelector("#error7").innerHTML = "Please enter your city"
       document.querySelector("#error7").style.color = "red"
       error = true;
-    } else {
-      if (city.length > 100) {
-        document.querySelector("#error7").innerHTML = "Your city is too long"
+    } else if (city.length > 28) {
+        document.querySelector("#error7").innerHTML = "Your city is too long, only 28 characters allowed"
         document.querySelector("#error7").style.color = "red"
         error = true;
+      }else{
+        document.querySelector("#error7").innerHTML = "";
+        error = true;
       }
-    }
+    
 
+      
     if (!state) {
       document.querySelector("#error8").innerHTML = "Please enter your state"
       document.querySelector("#error8").style.color = "red"
       error = true;
-    } else {
-      if (state.length > 100) {
-        document.querySelector("#error8").innerHTML = "Your state is too long"
-        document.querySelector("#error8").style.color = "red"
+    } else{
+        document.querySelector("#error8").innerHTML = ("");
         error = true;
-      }
     }
 
     if (!zip) {
       document.querySelector("#error9").innerHTML = "Please enter your zipcode"
       document.querySelector("#error9").style.color = "red"
       error = true;
-    } else {
-      if (zip.length > 20) {
+    } else if (zip.length > 20) {
         document.querySelector("#error9").innerHTML = "Your zip is too long"
         document.querySelector("#error9").style.color = "red"
         error = true;
+      }else{
+        document.querySelector("#error9").innerHTML = ("");
+        error = true;
       }
-    }
-  
+    
+      // come back to this
     if (!phone) {
       document.querySelector("#error11").innerHTML = "Please enter your phone number"
       document.querySelector("#error11").style.color = "red"
       error = true;
-    } else {
-      if (phone.length > 100) {
-        document.querySelector("#error11").innerHTML = "Your country is too long"
+    } else if (phone.length > 10) {
+        document.querySelector("#error11").innerHTML = "Your phone number is too long"
         document.querySelector("#error11").style.color = "red"
         error = true;
+      }else if(phone.length < 10){
+      document.querySelector("#error11").innerHTML = "Your phone number is too short"
+      document.querySelector("#error11").style.color = "red"
+      error = true;
+      }else{
+        document.querySelector("#error11").innerHTML = ("");
+        error = true;
       }
-    }
+    
 
     if (error) {
       event.preventDefault()
