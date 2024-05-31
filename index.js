@@ -266,6 +266,7 @@ app.get("/States/US", async (req, res) => {
     console.log(response.body);
   });
 });
+
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;
@@ -332,7 +333,29 @@ app.post("/CreateAccount", async (req, res) => {
     res.render("newUser");
   }
 });
+//checks username in backend and sends data to frontend
+app.post("/CheckUsername", async (req, res) => {
+  let UserName = req.body.UserName;
 
+  if (!UserName) {
+    return res.status(400).json({ error: "Username is required" });
+  }
+
+  try {
+    let check = `SELECT COUNT(*) AS count FROM Customers WHERE UserName = ?`;
+    let checkParam = [UserName];
+    let checkResult = await executeSQL(check, checkParam);
+    if (checkResult[0].count > 0) {
+      return res.json({ available: false });
+    } else {
+      return res.json({ available: true });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Database error" });
+  }
+});
+
+//Displays whats inside the cart
 app.get("/viewProducts", async (req, res) => {
   let sql = `SELECT * FROM Products WHERE QuantityAvailable > 0 ORDER BY Name`;
   let rows = await executeSQL(sql);

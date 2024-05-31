@@ -32,8 +32,8 @@ async function populateStates() {
   }
 }
 populateStates();
-
-function validation(event) {
+async function validation(event) {
+ event.preventDefault();
     let error = false;
     let user = document.querySelector("input[name=UserName]").value
     let fname = document.querySelector("input[name=FirstName]").value
@@ -46,18 +46,32 @@ function validation(event) {
     let zip = document.querySelector("input[name=ZipCode]").value
     let phone = document.querySelector("input[name=Phone]").value
     error = false;
-
+  
     if (!user) {
-      document.querySelector("#error").innerHTML = "Please enter a username"
-      document.querySelector("#error").style.color = "red"
+      document.querySelector("#error").innerHTML = "Please enter a username";
+      document.querySelector("#error").style.color = "red";
+      error = true;
+    } else if (user.length > 50) {
+      document.querySelector("#error").innerHTML = "Your username is too long";
+      document.querySelector("#error").style.color = "red";
       error = true;
     } else {
-      if (user.length > 50) {
-        document.querySelector("#error").innerHTML = "Your username is too long"
-        document.querySelector("#error").style.color = "red"
+      let url = "/CheckUsername";
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ UserName: user })
+      });
+      let usernameData = await response.json();
+      if (!usernameData.available) {
+        document.querySelector("#error").innerHTML = "Username already taken";
+        document.querySelector("#error").style.color = "red";
         error = true;
       }
     }
+    
 
     if(!fname) {
       document.querySelector("#error2").innerHTML = "Please enter your first name"
