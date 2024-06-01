@@ -2,8 +2,6 @@ const express = require("express");
 const unirest = require('unirest');
 const axios = require('axios');
 const mysql = require("mysql");
-const mySecret = process.env['DBPassword']
-const mySecretUser = process.env['DBUSERNAME']
 const app = express();
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
@@ -226,7 +224,7 @@ async function getNewToken() {
     const response = await axios.get('https://www.universal-tutorial.com/api/getaccesstoken', {
       headers: {
         "Accept": "application/json",
-        "api-token": "jfzZJiO3tZ5Mb5U6NCgHS3plzESq6XIwBeFcy8qXAWk2ROMELDhZc0adec8mcJmayew",
+        "api-token": process.env['hiddenUSstates'],
         "user-email": "drecollege1@gmail.com"
       }
     });
@@ -438,8 +436,8 @@ function dbConnection() {
   const pool = mysql.createPool({
     connectionLimit: 10,
     host: "wm63be5w8m7gs25a.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-    user: mySecretUser,
-    password: mySecret,
+    user: process.env['DBUSERNAME'],
+    password: process.env['DBPassword'],
     database: "e94hmvgxib7qgtfn",
   });
 
