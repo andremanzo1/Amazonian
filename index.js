@@ -213,60 +213,6 @@ app.post("/Login", async (req, res) => {
 app.get("/CreateAccount", async (req, res) => {
   res.render("newUser");
 });
-
-// record of date and time
-let token = '';
-let tokenExpiration = new Date('2024-05-27T00:44:10.000Z'); // Initial token expiration time
-
-// Function to get a new token
-async function getNewToken() {
-  try {
-    const response = await axios.get('https://www.universal-tutorial.com/api/getaccesstoken', {
-      headers: {
-        "Accept": "application/json",
-        "api-token": "jfzZJiO3tZ5Mb5U6NCgHS3plzESq6XIwBeFcy8qXAWk2ROMELDhZc0adec8mcJmayew",
-        "user-email": "drecollege1@gmail.com"
-      }
-    });
-    token = response.data.auth_token;
-    tokenExpiration = new Date(Date.now() + response.data.expires_in * 1000); // Update expiration time
-    console.log('New token acquired:', token);
-  } catch (error) {
-    console.error('Error fetching new token:', error.response ? error.response.data : error.message);
-    throw new Error('Unable to acquire new token');
-  }
-}
-
-// Middleware to check and refresh the token if needed
-async function checkToken(req, res, next) {
-  try {
-    if (!token || Date.now() > tokenExpiration.getTime()) {
-      await getNewToken();
-    }
-    next();
-  } catch (error) {
-    res.status(500).send('Error refreshing token');
-  }
-}
-
-app.use(checkToken);
-// fills dropdown with states
-app.get("/States/US", async (req, res) => {
-  const US = unirest("GET", "https://www.universal-tutorial.com/api/states/United States");
-  US.headers({
-    "Authorization": `Bearer ${token}`,
-    "Accept": "application/json"
-  });
-  US.end(response => {
-    if (response.error) {
-      console.error('Error fetching states:', response.error);
-      return res.status(500).send('Error fetching states');
-    }
-    res.json(response.body);
-    console.log(response.body);
-  });
-});
-
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;
@@ -333,6 +279,61 @@ app.post("/CreateAccount", async (req, res) => {
     res.render("newUser");
   }
 });
+
+// record of date and time
+let token = '';
+let tokenExpiration = new Date('2024-05-27T00:44:10.000Z'); // Initial token expiration time
+
+// Function to get a new token
+async function getNewToken() {
+  try {
+    const response = await axios.get('https://www.universal-tutorial.com/api/getaccesstoken', {
+      headers: {
+        "Accept": "application/json",
+        "api-token": process.env['hiddenUSstates'],
+        "user-email": "drecollege1@gmail.com"
+      }
+    });
+    token = response.data.auth_token;
+    tokenExpiration = new Date(Date.now() + response.data.expires_in * 1000); // Update expiration time
+    console.log('New token acquired:', token);
+  } catch (error) {
+    console.error('Error fetching new token:', error.response ? error.response.data : error.message);
+    throw new Error('Unable to acquire new token');
+  }
+}
+
+// Middleware to check and refresh the token if needed
+async function checkToken(req, res, next) {
+  try {
+    if (!token || Date.now() > tokenExpiration.getTime()) {
+      await getNewToken();
+    }
+    next();
+  } catch (error) {
+    res.status(500).send('Error refreshing token');
+  }
+}
+
+app.use(checkToken);
+// fills dropdown with states
+app.get("/States/US", async (req, res) => {
+  const US = unirest("GET", "https://www.universal-tutorial.com/api/states/United States");
+  US.headers({
+    "Authorization": `Bearer ${token}`,
+    "Accept": "application/json"
+  });
+  US.end(response => {
+    if (response.error) {
+      console.error('Error fetching states:', response.error);
+      return res.status(500).send('Error fetching states');
+    }
+    res.json(response.body);
+    console.log(response.body);
+  });
+});
+
+
 // check if username taken
 app.get("/checkUsername", async (req, res) => {
   const username = req.query.UserName.toLowerCase();
@@ -436,8 +437,8 @@ function dbConnection() {
   const pool = mysql.createPool({
     connectionLimit: 10,
     host: "wm63be5w8m7gs25a.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-    user: "ct66i9sfgn5eot0d",
-    password: "ogicf62m9waw6gga",
+    user: process.env['DBUSERNAME'],
+    password: process.env['DBPassword'],
     database: "e94hmvgxib7qgtfn",
   });
 
