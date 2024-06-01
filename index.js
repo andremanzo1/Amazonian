@@ -2,6 +2,8 @@ const express = require("express");
 const unirest = require('unirest');
 const axios = require('axios');
 const mysql = require("mysql");
+const mySecret = process.env['DBPassword']
+const mySecretUser = process.env['DBUSERNAME']
 const app = express();
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
@@ -436,8 +438,8 @@ function dbConnection() {
   const pool = mysql.createPool({
     connectionLimit: 10,
     host: "wm63be5w8m7gs25a.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-    user: "ct66i9sfgn5eot0d",
-    password: "ogicf62m9waw6gga",
+    user: mySecretUser,
+    password: mySecret,
     database: "e94hmvgxib7qgtfn",
   });
 
