@@ -266,6 +266,7 @@ app.get("/States/US", async (req, res) => {
     console.log(response.body);
   });
 });
+
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;
@@ -332,7 +333,19 @@ app.post("/CreateAccount", async (req, res) => {
     res.render("newUser");
   }
 });
+// check if username taken
+app.get("/checkUsername", async (req, res) => {
+  const username = req.query.UserName.toLowerCase();
 
+    const check = `SELECT COUNT(*) AS count FROM Customers WHERE UserName = ?`;
+    const checkParam = [username];
+    const checkResult = await executeSQL(check, checkParam);
+
+    res.json({ exists: checkResult[0].count > 0 });
+ 
+});
+
+//Displays whats inside the cart
 app.get("/viewProducts", async (req, res) => {
   let sql = `SELECT * FROM Products WHERE QuantityAvailable > 0 ORDER BY Name`;
   let rows = await executeSQL(sql);
