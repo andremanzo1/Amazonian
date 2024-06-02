@@ -151,9 +151,16 @@ async function validation(event) {
       document.querySelector("#error7").innerHTML = "Your city is too long, only 28 characters allowed"
       document.querySelector("#error7").style.color = "red"
       error = true;
+    }else if(city){
+    let cityregex = /^[a-zA-Z\u0080-\u024F]+(?:([\ \-\']|(\.\ ))[a-zA-Z\u0080-\u024F]+)*$/;
+    if (!cityregex.test(city)){
+      document.querySelector("#error7").innerHTML = "Please enter a valid city"
+      document.querySelector("#error7").style.color = "red"
+      error = true;
     }else{
       document.querySelector("#error7").innerHTML = "";
     
+    }
     }
 
   if (!state) {
