@@ -67,6 +67,7 @@ async function validation(event) {
        document.querySelector("#error").innerHTML = "";
     }
     }
+  //validating first name
   if(!fname) {
     document.querySelector("#error2").innerHTML = "Please enter your first name"
     document.querySelector("#error2").style.color = "red"
@@ -79,7 +80,7 @@ async function validation(event) {
     document.querySelector("#error2").innerHTML = "";
     }
 
-
+// validation for last name
   if (!lname) {
     document.querySelector("#error3").innerHTML = "Please enter your last name"
     document.querySelector("#error3").style.color = "red"
@@ -113,20 +114,21 @@ async function validation(event) {
       
     }
     }
+  //validation for password
   if (!pass) {
     document.querySelector("#error5").innerHTML = "Please enter a password"
     document.querySelector("#error5").style.color = "red"
     error = true;
-  } else if (pass.length > 16) {
-      document.querySelector("#error5").innerHTML = "Your password is too long, only 14 or 16 characters allowed"
+  } else if (pass) {
+     let passregex = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/;
+    if(!passregex.test(pass)){
+      document.querySelector("#error5").innerHTML = " 2 uppercase, one special case, two digits, and three lowercase letters"
       document.querySelector("#error5").style.color = "red"
       error = true;
-    }else if(pass.length < 14){
-    document.querySelector("#error5").innerHTML = "Your password is too short, only 14 or 16 characteers allowed"
-    document.querySelector("#error5").style.color = "red"
-    error = true;
     }else{
       document.querySelector("#error5").innerHTML = "";
+    }
+      
     }
 
 
@@ -176,13 +178,16 @@ async function validation(event) {
     document.querySelector("#error9").innerHTML = "Please enter your zipcode"
     document.querySelector("#error9").style.color = "red"
     error = true;
-  } else if (zip.length > 20) {
-      document.querySelector("#error9").innerHTML = "Your zip is too long"
+  } else if (zip) {
+      let Zipregex = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+    if(!Zipregex.test(zip)){
+      document.querySelector("#error9").innerHTML = "Please enter a valid zipcode"
       document.querySelector("#error9").style.color = "red"
       error = true;
     }else{
       document.querySelector("#error9").innerHTML = ("");
      
+    }
     }
 
   if (!phone) {
