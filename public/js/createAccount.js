@@ -131,7 +131,7 @@ async function validation(event) {
       
     }
 
-
+  // validation for address
   if (!address) {
     document.querySelector("#error6").innerHTML = "Please enter your address"
     document.querySelector("#error6").style.color = "red"
@@ -144,7 +144,7 @@ async function validation(event) {
       document.querySelector("#error6").innerHTML = "";
     }
 
-
+  //validation for city
   if (!city) {
     document.querySelector("#error7").innerHTML = "Please enter your city"
     document.querySelector("#error7").style.color = "red"
@@ -164,7 +164,7 @@ async function validation(event) {
     
     }
     }
-
+  //validation for state
   if (!state) {
     document.querySelector("#error8").innerHTML = "Please enter your state"
     document.querySelector("#error8").style.color = "red"
@@ -173,7 +173,7 @@ async function validation(event) {
       document.querySelector("#error8").innerHTML = ("");
       
   }
-
+  //validation for zip
   if (!zip) {
     document.querySelector("#error9").innerHTML = "Please enter your zipcode"
     document.querySelector("#error9").style.color = "red"
@@ -189,7 +189,7 @@ async function validation(event) {
      
     }
     }
-
+  //validation for phone
   if (!phone) {
     document.querySelector("#error11").innerHTML = "Please enter your phone number"
     document.querySelector("#error11").style.color = "red"
