@@ -178,22 +178,20 @@ async function validation(event) {
      
     }
 
-    // come back to this
   if (!phone) {
     document.querySelector("#error11").innerHTML = "Please enter your phone number"
     document.querySelector("#error11").style.color = "red"
     error = true;
-  } else if (phone.length > 10) {
-      document.querySelector("#error11").innerHTML = "Your phone number is too long"
-      document.querySelector("#error11").style.color = "red"
-      error = true;
-    }else if(phone.length < 10){
-    document.querySelector("#error11").innerHTML = "Your phone number is too short"
-    document.querySelector("#error11").style.color = "red"
-    error = true;
-    }else{
+  } else if (phone) {
+    let phoneregex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+     if(!phoneregex.test(phone)){
+       document.querySelector("#error11").innerHTML = "Please enter a valid phone number"
+       document.querySelector("#error11").style.color = "red"
+       error = true;
+     } else{
       document.querySelector("#error11").innerHTML = ("");
       
+    } 
     }
   
     if (error) {
