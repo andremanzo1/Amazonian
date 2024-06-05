@@ -218,10 +218,11 @@ app.post("/CreateAccount", async (req, res) => {
   let LastName = req.body.LastName;
   let Email = req.body.Email;
   let Password = req.body.Password;
-  let Address = req.body.Address;
-  let City = req.body.City;
-  let State = req.body.State;
-  let ZipCode = req.body.ZipCode;
+  // moving this to UserLocation.ejs
+  //let Address = req.body.Address;
+  //let City = req.body.City;
+  //let State = req.body.State;
+  //let ZipCode = req.body.ZipCode;
   let Phone = req.body.Phone;
 
   if (
@@ -230,10 +231,6 @@ app.post("/CreateAccount", async (req, res) => {
     !LastName ||
     !Email ||
     !Password ||
-    !Address ||
-    !City ||
-    !State ||
-    !ZipCode ||
     !Phone
   ) {
     // If any required field is missing, redirect back to create account page
@@ -251,7 +248,7 @@ app.post("/CreateAccount", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(Password, 10);
-    let query = `INSERT INTO Customers (UserName, FirstName, LastName, Email, Password, Address, City, State, ZipCode, Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    let query = `INSERT INTO Customers (UserName, FirstName, LastName, Email, Password, Phone) VALUES (?, ?, ?, ?, ?, ?)`;
 
     let params = [
       UserName,
@@ -259,10 +256,10 @@ app.post("/CreateAccount", async (req, res) => {
       LastName,
       Email,
       hashedPassword,
-      Address,
-      City,
-      State,
-      ZipCode,
+      //Address,
+      //City,
+      //State,
+     // ZipCode,
       Phone,
     ];
 

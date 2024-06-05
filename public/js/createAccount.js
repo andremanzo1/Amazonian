@@ -1,5 +1,5 @@
 document.querySelector("form").addEventListener("submit", validation)
-document.querySelector("#state").addEventListener("change", populateStates)
+// document.querySelector("#state").addEventListener("change", populateStates)
 async function displayRandomBackground() {
   let url = `https://api.unsplash.com/photos/random/?client_id=UmG_IJB6rHWGjQYr8-DsaDQlUDAUQImkoxT218vZ5mY&featured=true&query=rainforest&orientation=landscape`
   let response = await fetch(url)
@@ -10,7 +10,8 @@ async function displayRandomBackground() {
 }
 displayRandomBackground();
 // to populate the states in dropdown bar
-let statesPopulated = false;
+/**
+ *let statesPopulated = false;
 async function populateStates() {
   if (statesPopulated) return;
   statesPopulated = true;
@@ -30,10 +31,18 @@ async function populateStates() {
     document.querySelector("#state").appendChild(option);
   }
 }
+ *
+ * 
+ */
+
+
 ///////////////////////////////////////////////
 // comeback
-(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
-  key: ,// will add the key when moving this code to the backend 
+
+
+/**
+ *(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+  key: '',// will add the key when moving this code to the backend 
   v: "weekly",
   // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
   // Add other bootstrap parameters as needed, using camel case.
@@ -49,6 +58,7 @@ async function initMap() {
 }
 
 initMap();
+ 
 
 async function validateShippingAddress(address, callback) {
   const { Geocoder } = await google.maps.importLibrary("geocoding");
@@ -64,7 +74,8 @@ async function validateShippingAddress(address, callback) {
     }
   });
 }
-const userAddress = '1600 Amphitheatre Parkway, Mountain View, CA';
+
+const userAddress = '500 W 10TH Street SPC 61, Gilroy, California, 95020';
 
 validateShippingAddress(userAddress, function (isValid, formattedAddress, location) {
   if (isValid) {
@@ -75,8 +86,15 @@ validateShippingAddress(userAddress, function (isValid, formattedAddress, locati
     console.log('Invalid address');
   }
 });
+ * 
+ */
+  
+
+ 
+ 
+
 /////////////////////////////////////////////////////////////////
-populateStates();
+// calls the api to fill the drop down with states: populateStates();
 async function validation(event) {
  
     let error = false;
@@ -85,10 +103,10 @@ async function validation(event) {
     let lname = document.querySelector("input[name=LastName]").value
     let email = document.querySelector("input[name=Email]").value
     let pass = document.querySelector("input[name=Password]").value
-    let address = document.querySelector("input[name=Address]").value
-    let city = document.querySelector("input[name=City]").value
-    let state = document.querySelector("#state").value
-    let zip = document.querySelector("input[name=ZipCode]").value
+    //let address = document.querySelector("input[name=Address]").value
+    //let city = document.querySelector("input[name=City]").value
+    //let state = document.querySelector("#state").value
+    //let zip = document.querySelector("input[name=ZipCode]").value
     let phone = document.querySelector("input[name=Phone]").value
     error = false;
    event.preventDefault();
@@ -177,7 +195,8 @@ async function validation(event) {
     }
 
   // validation for address
-  if (!address) {
+  /**
+   *if (!address) {
     document.querySelector("#error6").innerHTML = "Please enter your address"
     document.querySelector("#error6").style.color = "red"
     error = true;
@@ -188,9 +207,13 @@ async function validation(event) {
     }else{
       document.querySelector("#error6").innerHTML = "";
     }
+   * 
+   */
+  
 
   //validation for city
-  if (!city) {
+  /**
+   * if (!city) {
     document.querySelector("#error7").innerHTML = "Please enter your city"
     document.querySelector("#error7").style.color = "red"
     error = true;
@@ -209,8 +232,11 @@ async function validation(event) {
     
     }
     }
+   */
+  
   //validation for state
-  if (!state) {
+  /**
+   *if (!state) {
     document.querySelector("#error8").innerHTML = "Please enter your state"
     document.querySelector("#error8").style.color = "red"
     error = true;
@@ -218,8 +244,12 @@ async function validation(event) {
       document.querySelector("#error8").innerHTML = ("");
       
   }
+   * 
+   */
+  
   //validation for zip
-  if (!zip) {
+  /**
+   * if (!zip) {
     document.querySelector("#error9").innerHTML = "Please enter your zipcode"
     document.querySelector("#error9").style.color = "red"
     error = true;
@@ -234,6 +264,8 @@ async function validation(event) {
      
     }
     }
+   */
+  
   //validation for phone
   if (!phone) {
     document.querySelector("#error11").innerHTML = "Please enter your phone number"
