@@ -10,7 +10,6 @@ const { error } = require("console");
 const pool = dbConnection();
 const sessionStore = new MySQLStore({}, pool);
 app.set("trust proxy", 1); // trust first proxy
-
 app.use(
   session({
     secret: "keyboard cat",
@@ -279,6 +278,7 @@ app.post("/CreateAccount", async (req, res) => {
     res.render("newUser");
   }
 });
+
 
 // record of date and time
 let token = '';
