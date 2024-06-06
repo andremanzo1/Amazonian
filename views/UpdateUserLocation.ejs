@@ -1,0 +1,38 @@
+<%-  include("partials/head.ejs")    %>
+<%- include("partials/navUserSide.ejs") %>
+  <body>
+    
+      <h1 id = "createtitle">Update Locoation</h1>
+    <form action="/UpdateUserLocation" method="POST" autocomplete="off"id = "createtitle">
+      <input name="CustomerID" type="hidden" value = "<%=LocationInfo.CustomerID%>">
+      <br>
+      Address:
+      <input name="Address" type="text" value = "<%=LocationInfo.Address%>">
+      <span id="AddressError"></span>
+      <br>
+
+      City:
+      <input name="City" type="text"value = "<%=LocationInfo.City%>">
+      <span id="CityError"></span>
+      <br>
+
+      State:
+      <select name="State" id="state" value ="<%=LocationInfo.State%>"></select>
+      <span id="StateError"></span>
+      <br>
+
+      ZipCode:
+      <input name="ZipCode" type="text" value = "<%=LocationInfo.ZipCode%>">
+      <span id="ZipCodeError"></span>
+      <br>
+
+
+      <button>Save Location</button>
+
+    </form>
+
+    <!--<div id="map"></div>-->
+    <script src="/js/AddLocation.js"></script>
+
+  </body>
+  </html>

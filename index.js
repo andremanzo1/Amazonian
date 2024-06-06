@@ -264,6 +264,10 @@ app.post("/CreateAccount", async (req, res) => {
     ];
 
     let result = await executeSQL(query, params);
+    //automatically insert a empty loction for the user, check back for state
+    let insertLocation = `INSERT INTO Location (CustomerID, Address, City, ZipCode) VALUES (?, ?, ?, ?)`;
+    let locationParams = [result.insertId, '', '', ''];
+    await executeSQL(insertLocation, locationParams);
     // If the account is successfully created, render the Userhome view
     req.session.CustomerID = result.insertId;
     req.session.UserName = UserName;
@@ -277,6 +281,26 @@ app.post("/CreateAccount", async (req, res) => {
 });
 
 //UserLocation
+app.get("/UpdateUserLocation",async (req, res) =>{
+  let CustomerID = req.session.CustomerID;
+  let sql = `SELECT *
+              FROM Location
+              WHERE CustomerID = ?`;
+  let rows = await executeSQL(sql, [CustomerID]);
+  res.render("UpdateUserLocation", { LocationInfo: rows[0] });
+});
+app.post("/UpdateUserLocation", async (req, res) =>{
+  let customerID = req.session.CustomerID;
+  let Address = req.body.Address;
+  let City = req.body.City;
+  let State = req.body.State;
+  let ZipCode = req.body.ZipCode;
+  let updateLocation = `UPDATE Location SET Address = ?, City = ?, State = ?,ZipCode=? WHERE CustomerID = ?`;
+  await executeSQL(updateLocation, [ Address, City, State, ZipCode, customerID]);
+  res.redirect('/UpdateUserLocation');
+});
+//settings option
+
 
 
 // record of date and time
