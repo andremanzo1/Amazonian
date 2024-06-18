@@ -287,7 +287,12 @@ app.get("/UpdateUserLocation",async (req, res) =>{
               FROM Location
               WHERE CustomerID = ?`;
   let rows = await executeSQL(sql, [CustomerID]);
-  res.render("UpdateUserLocation", { LocationInfo: rows[0] });
+  let StateQuery = `SELECT DISTINCT State FROM Location`;
+  let stateResult = await executeSQL(StateQuery);
+  res.render("UpdateUserLocation", {
+    LocationInfo: rows[0],
+    States: stateResult,
+  });
 });
 app.post("/UpdateUserLocation", async (req, res) =>{
   let customerID = req.session.CustomerID;
