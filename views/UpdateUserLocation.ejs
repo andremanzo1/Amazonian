@@ -17,11 +17,12 @@
       <br>
 
       State:
-      <select name="State" id="state" >
-        <% for (let State of States) { %>
-          <option <%= State.State === LocationInfo.State ? "selected" : "" %>><%= State.State %></option>
-          <% } %>
-      </select>
+      <select name="State" id="state">
+        <% for (let state of States) { 
+          if (state.State) { %>
+          <option value="<%= state.State %>" <%= state.State === LocationInfo.State ? "selected" : "" %>><%= state.State %></option>
+        <% }} %>
+      </select> 
       
       <span id="StateError"></span>
       <br>

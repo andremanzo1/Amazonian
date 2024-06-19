@@ -218,11 +218,6 @@ app.post("/CreateAccount", async (req, res) => {
   let LastName = req.body.LastName;
   let Email = req.body.Email;
   let Password = req.body.Password;
-  // moving this to UserLocation.ejs
-  //let Address = req.body.Address;
-  //let City = req.body.City;
-  //let State = req.body.State;
-  //let ZipCode = req.body.ZipCode;
   let Phone = req.body.Phone;
 
   if (
@@ -256,10 +251,6 @@ app.post("/CreateAccount", async (req, res) => {
       LastName,
       Email,
       hashedPassword,
-      //Address,
-      //City,
-      //State,
-     // ZipCode,
       Phone,
     ];
 

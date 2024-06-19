@@ -182,17 +182,20 @@ async function validation(event) {
     document.querySelector("#error5").innerHTML = "Please enter a password"
     document.querySelector("#error5").style.color = "red"
     error = true;
-  } else if (pass) {
-     let passregex = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/;
-    if(!passregex.test(pass)){
-      document.querySelector("#error5").innerHTML = " 2 uppercase, one special case, two digits, and three lowercase letters"
-      document.querySelector("#error5").style.color = "red"
-      error = true;
-    }else{
-      document.querySelector("#error5").innerHTML = "";
-    }
+  }else{
+    document.querySelector("#error5").innerHTML = "";
+  }
+  //else if (pass) {
+    // let passregex = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/;
+   // if(!passregex.test(pass)){
+    //  document.querySelector("#error5").innerHTML = " 2 uppercase, one special case, two digits, and three lowercase letters"
+   //   document.querySelector("#error5").style.color = "red"
+   //   error = true;
+   // }else{
+    //  document.querySelector("#error5").innerHTML = "";
+    //}
       
-    }
+    //}
 
   // validation for address
   /**
