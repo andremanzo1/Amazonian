@@ -278,8 +278,8 @@ app.get("/UpdateUserLocation",async (req, res) =>{
               FROM Location
               WHERE CustomerID = ?`;
   let rows = await executeSQL(sql, [CustomerID]);
-  let StateQuery = `SELECT DISTINCT State FROM Location`;
-  let stateResult = await executeSQL(StateQuery);
+  let StateQuery = `SELECT DISTINCT State FROM Location WHERE CustomerID = ?`;
+  let stateResult = await executeSQL(StateQuery,[CustomerID]);
   res.render("UpdateUserLocation", {
     LocationInfo: rows[0],
     States: stateResult,
