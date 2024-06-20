@@ -1,3 +1,4 @@
+document.querySelector("form").addEventListener("submit", validation)
 document.querySelector("#state").addEventListener("change", populateStates)
 let statesPopulated = false;
 async function populateStates() {
@@ -50,3 +51,83 @@ async function initMap() {
 }
 
 initMap();
+async function validation(event) {
+
+    let error = false;
+    let address = document.querySelector("input[name=Address]").value
+    let city = document.querySelector("input[name=City]").value
+    let state = document.querySelector("#state").value
+    let zip = document.querySelector("input[name=ZipCode]").value
+    error = false;
+   event.preventDefault();
+
+  // validation for address
+  
+   if (!address) {
+    document.querySelector("#AddressError").innerHTML = "Please enter your address"
+    document.querySelector("#AddressError").style.color = "red"
+    error = true;
+  } else if (address.length > 255) {
+      document.querySelector("#AddressError").innerHTML = "Your address is too long"
+      document.querySelector("#AddressError").style.color = "red"
+      error = true;
+    }else{
+      document.querySelector("#AddressError").innerHTML = "";
+    }
+  //validation for city
+    if (!city) {
+    document.querySelector("#CityError").innerHTML = "Please enter your city"
+    document.querySelector("#CityError").style.color = "red"
+    error = true;
+  } else if (city.length > 28) {
+      document.querySelector("#CityError").innerHTML = "Your city is too long, only 28 characters allowed"
+      document.querySelector("#CityError").style.color = "red"
+      error = true;
+    }else if(city){
+    let cityregex = /^[a-zA-Z\u0080-\u024F]+(?:([\ \-\']|(\.\ ))[a-zA-Z\u0080-\u024F]+)*$/;
+    if (!cityregex.test(city)){
+      document.querySelector("#CityError").innerHTML = "Please enter a valid city"
+      document.querySelector("#CityError").style.color = "red"
+      error = true;
+    }else{
+      document.querySelector("#CityError").innerHTML = "";
+
+    }
+    }
+  //validation for state
+  
+   if (!state) {
+    document.querySelector("#StateError").innerHTML = "Please enter your state"
+    document.querySelector("#StateError").style.color = "red"
+    error = true;
+  } else{
+      document.querySelector("#StateError").innerHTML = ("");
+
+  }
+
+  //validation for zip
+  
+    if (!zip) {
+    document.querySelector("#ZipCodeError").innerHTML = "Please enter your zipcode"
+    document.querySelector("#ZipCodeError").style.color = "red"
+    error = true;
+  } else if (zip) {
+      let Zipregex = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+    if(!Zipregex.test(zip)){
+      document.querySelector("#ZipCodeError").innerHTML = "Please enter a valid zipcode"
+      document.querySelector("#ZipCodeError").style.color = "red"
+      error = true;
+    }else{
+      document.querySelector("#ZipCodeError").innerHTML = ("");
+
+    }
+    }
+   
+
+    if (error) {
+      event.preventDefault()
+    }else{
+      event.target.submit();
+    }
+    error = false;
+}
