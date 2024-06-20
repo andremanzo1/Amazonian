@@ -10,7 +10,6 @@ const { error } = require("console");
 const pool = dbConnection();
 const sessionStore = new MySQLStore({}, pool);
 app.set("trust proxy", 1); // trust first proxy
-
 app.use(
   session({
     secret: "keyboard cat",
@@ -219,10 +218,6 @@ app.post("/CreateAccount", async (req, res) => {
   let LastName = req.body.LastName;
   let Email = req.body.Email;
   let Password = req.body.Password;
-  let Address = req.body.Address;
-  let City = req.body.City;
-  let State = req.body.State;
-  let ZipCode = req.body.ZipCode;
   let Phone = req.body.Phone;
 
   if (
@@ -231,10 +226,6 @@ app.post("/CreateAccount", async (req, res) => {
     !LastName ||
     !Email ||
     !Password ||
-    !Address ||
-    !City ||
-    !State ||
-    !ZipCode ||
     !Phone
   ) {
     // If any required field is missing, redirect back to create account page
@@ -252,7 +243,7 @@ app.post("/CreateAccount", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(Password, 10);
-    let query = `INSERT INTO Customers (UserName, FirstName, LastName, Email, Password, Address, City, State, ZipCode, Phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    let query = `INSERT INTO Customers (UserName, FirstName, LastName, Email, Password, Phone) VALUES (?, ?, ?, ?, ?, ?)`;
 
     let params = [
       UserName,
@@ -260,14 +251,14 @@ app.post("/CreateAccount", async (req, res) => {
       LastName,
       Email,
       hashedPassword,
-      Address,
-      City,
-      State,
-      ZipCode,
       Phone,
     ];
 
     let result = await executeSQL(query, params);
+    //automatically insert a empty loction for the user, check back for state
+    let insertLocation = `INSERT INTO Location (CustomerID, Address, City, ZipCode) VALUES (?, ?, ?, ?)`;
+    let locationParams = [result.insertId, '', '', ''];
+    await executeSQL(insertLocation, locationParams);
     // If the account is successfully created, render the Userhome view
     req.session.CustomerID = result.insertId;
     req.session.UserName = UserName;
@@ -279,6 +270,34 @@ app.post("/CreateAccount", async (req, res) => {
     res.render("newUser");
   }
 });
+
+//UserLocation
+app.get("/UpdateUserLocation",async (req, res) =>{
+  let CustomerID = req.session.CustomerID;
+  let sql = `SELECT *
+              FROM Location
+              WHERE CustomerID = ?`;
+  let rows = await executeSQL(sql, [CustomerID]);
+  let StateQuery = `SELECT DISTINCT State FROM Location WHERE CustomerID = ?`;
+  let stateResult = await executeSQL(StateQuery,[CustomerID]);
+  res.render("UpdateUserLocation", {
+    LocationInfo: rows[0],
+    States: stateResult,
+  });
+});
+app.post("/UpdateUserLocation", async (req, res) =>{
+  let customerID = req.session.CustomerID;
+  let Address = req.body.Address;
+  let City = req.body.City;
+  let State = req.body.State;
+  let ZipCode = req.body.ZipCode;
+  let updateLocation = `UPDATE Location SET Address = ?, City = ?, State = ?,ZipCode=? WHERE CustomerID = ?`;
+  await executeSQL(updateLocation, [ Address, City, State, ZipCode, customerID]);
+  res.redirect('/UpdateUserLocation');
+});
+//settings option
+
+
 
 // record of date and time
 let token = '';
@@ -333,6 +352,11 @@ app.get("/States/US", async (req, res) => {
   });
 });
 
+//sends google encrypted api key to frontend
+app.get("/googleAPI", (req, res) =>{
+  let googleAPI = process.env['googleAPI'];
+  res.json({key: googleAPI});
+});
 
 // check if username taken
 app.get("/checkUsername", async (req, res) => {
