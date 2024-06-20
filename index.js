@@ -352,6 +352,11 @@ app.get("/States/US", async (req, res) => {
   });
 });
 
+//sends google encrypted api key to frontend
+app.get("/googleAPI", (req, res) =>{
+  let googleAPI = process.env['googleAPI'];
+  res.json({key: googleAPI});
+});
 
 // check if username taken
 app.get("/checkUsername", async (req, res) => {
