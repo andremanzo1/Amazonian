@@ -57,7 +57,7 @@ async function initMap() {
 
   // The map, centered at the location
   map = new Map(document.getElementById("map"), {
-    zoom: 4,
+    zoom: 16,
     center: position,
     mapId: "DEMO_MAP_ID",
   });
@@ -89,26 +89,40 @@ async function validateShippingAddress(address) {
   });
 }
 
-async function MapPing() {
+async function MapPing(event) {
+   //event.preventDefault();
+  let error = false;
   let address = document.querySelector("input[name=Address]").value;
   let city = document.querySelector("input[name=City]").value;
   let state = document.querySelector("#state").value;
+  let ConvertStateAbreviation = await abbrState(state, 'abbr')
   let zip = document.querySelector("input[name=ZipCode]").value;
-
-  const userAddress = `${address}, ${city}, ${state}, ${zip}`;
+  const userAddress = `${address}, ${city}, ${ConvertStateAbreviation} ${zip}, USA`;
   const validationResponse = await validateShippingAddress(userAddress);
-
-  if (validationResponse.isValid) {
-    const location = validationResponse.location;
-    return { lat: location.lat(), lng: location.lng() };
-  } else {
-    console.log('Invalid address');
-    return null;
+  
+  
+  
+  if (validationResponse.isValid ) {
+    const GoogleAddress = validationResponse.formattedAddress;
+    const CorrectAddress = await func.formatStreetAddress(userAddress)
+    let SimilarPercent = Math.round(await similarity(GoogleAddress,CorrectAddress)*10000)/100;
+    if ( SimilarPercent > 91 ){
+      const location = validationResponse.location;
+      return { lat: location.lat(), lng: location.lng() };
+    }else{
+      document.querySelector("#ValidLocation").innerHTML = 'Please check location credentials';
+      document.querySelector("#ValidLocation").style.color = "red"
+      error = true;
+    }    
+    }
+  if (error) {
+    return; 
+  }else{
+    event.target.submit();
   }
+   
 }
-
 async function validateEntries(event) {
-
     let error = false;
     let address = document.querySelector("input[name=Address]").value
     let city = document.querySelector("input[name=City]").value
@@ -184,4 +198,166 @@ async function validateEntries(event) {
       event.target.submit();
     }
     error = false;
+}
+//converts the state name to its abreviation
+async function abbrState(input, to){
+
+    var states = [
+        ['Arizona', 'AZ'],
+        ['Alabama', 'AL'],
+        ['Alaska', 'AK'],
+        ['Arkansas', 'AR'],
+        ['California', 'CA'],
+        ['Colorado', 'CO'],
+        ['Connecticut', 'CT'],
+        ['Delaware', 'DE'],
+        ['Florida', 'FL'],
+        ['Georgia', 'GA'],
+        ['Hawaii', 'HI'],
+        ['Idaho', 'ID'],
+        ['Illinois', 'IL'],
+        ['Indiana', 'IN'],
+        ['Iowa', 'IA'],
+        ['Kansas', 'KS'],
+        ['Kentucky', 'KY'],
+        ['Louisiana', 'LA'],
+        ['Maine', 'ME'],
+        ['Maryland', 'MD'],
+        ['Massachusetts', 'MA'],
+        ['Michigan', 'MI'],
+        ['Minnesota', 'MN'],
+        ['Mississippi', 'MS'],
+        ['Missouri', 'MO'],
+        ['Montana', 'MT'],
+        ['Nebraska', 'NE'],
+        ['Nevada', 'NV'],
+        ['New Hampshire', 'NH'],
+        ['New Jersey', 'NJ'],
+        ['New Mexico', 'NM'],
+        ['New York', 'NY'],
+        ['North Carolina', 'NC'],
+        ['North Dakota', 'ND'],
+        ['Ohio', 'OH'],
+        ['Oklahoma', 'OK'],
+        ['Oregon', 'OR'],
+        ['Pennsylvania', 'PA'],
+        ['Rhode Island', 'RI'],
+        ['South Carolina', 'SC'],
+        ['South Dakota', 'SD'],
+        ['Tennessee', 'TN'],
+        ['Texas', 'TX'],
+        ['Utah', 'UT'],
+        ['Vermont', 'VT'],
+        ['Virginia', 'VA'],
+        ['Washington', 'WA'],
+        ['West Virginia', 'WV'],
+        ['Wisconsin', 'WI'],
+        ['Wyoming', 'WY'],
+    ];
+
+    if (to == 'abbr'){
+        input = input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        for(i = 0; i < states.length; i++){
+            if(states[i][0] == input){
+                return(states[i][1]);
+            }
+        }    
+    } else if (to == 'name'){
+        input = input.toUpperCase();
+        for(i = 0; i < states.length; i++){
+            if(states[i][1] == input){
+                return(states[i][0]);
+            }
+        }    
+    }
+}
+
+async function similarity(s1, s2) {
+  var longer = s1;
+  var shorter = s2;
+  if (s1.length < s2.length) {
+    longer = s2;
+    shorter = s1;
+  }
+  var longerLength = longer.length;
+  if (longerLength === 0) {
+    return 1.0;
+  }
+  
+  return (longerLength - await editDistance(longer, shorter)) / parseFloat(longerLength);
+}
+
+async function editDistance(s1, s2) {
+  s1 = s1.toLowerCase();
+  s2 = s2.toLowerCase();
+
+  var costs = new Array();
+  for (var i = 0; i <= s1.length; i++) {
+    var lastValue = i;
+    for (var j = 0; j <= s2.length; j++) {
+      if (i == 0)
+        costs[j] = j;
+      else {
+        if (j > 0) {
+          var newValue = costs[j - 1];
+          if (s1.charAt(i - 1) != s2.charAt(j - 1))
+            newValue = Math.min(Math.min(newValue, lastValue),
+              costs[j]) + 1;
+          costs[j - 1] = lastValue;
+          lastValue = newValue;
+        }
+      }
+    }
+    if (i > 0)
+      costs[s2.length] = lastValue;
+  }
+  return costs[s2.length];
+}
+var func = {}
+func.toTitleCase = async function(str) {
+  if(typeof(str) === 'undefined')
+    return
+  return str.toLowerCase().replace(/(?:^|\s|\/|\-)\w/g, function(match) { 
+    return match.toUpperCase();  
+  })
+}
+func.formatStreetAddress = async function(address) {
+    address = address.replace(/[.,]/g, '')
+    var replaceWords = {
+        'apartment': '#',
+        'apt': '#',
+        'expressway': 'Expy',
+        'po box': '#',
+        'suite': '#',
+        'ste': '#',
+        'avenue': 'Ave',
+        'boulevard': 'Blvd',
+        'circle': 'Cir',
+        'court': 'Ct',
+        'crt': 'Ct',
+        'drive': 'Dr',
+        'lane': 'Ln',
+        'mount': 'Mt',
+        'highway': 'Hwy',
+        'parkway': 'Pkwy',
+        'place': 'Pl',
+        'street': 'St',
+        'east': 'E',
+        'west': 'W',
+        'south': 'S',
+        'north': 'N',
+        'road': 'Rd'
+      },
+    formatted_address = []
+    address.split(' ').forEach(function(word) {
+      word = word.toLowerCase().trim()
+      if(replaceWords[word]) {
+        formatted_address.push(replaceWords[word])
+        return
+      }
+      formatted_address.push(word)
+    })
+    formatted_address = formatted_address.join(' ')
+    formatted_address = formatted_address.replace(/\# /g, '#')
+    return func.toTitleCase(formatted_address)
 }
