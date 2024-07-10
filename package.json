@@ -18,6 +18,8 @@
     "express-mysql-session": "^3.0.2",
     "express-session": "^1.18.0",
     "mysql": "^2.18.1",
+    "string-comparison": "^1.3.0",
+    "string-similarity-js": "^2.1.4",
     "unirest": "^0.6.0"
   },
   "description": ""
