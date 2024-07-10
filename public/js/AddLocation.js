@@ -1,6 +1,6 @@
 document.querySelector("form").addEventListener("submit", validateEntries)
 document.querySelector("#state").addEventListener("change", populateStates)
-document.querySelector("form").addEventListener("change", MapPing)
+document.querySelector("form").addEventListener("submit", MapPing)
 let statesPopulated = false;
 async function populateStates() {
   if (statesPopulated) return;
@@ -89,9 +89,8 @@ async function validateShippingAddress(address) {
   });
 }
 
-async function MapPing(event) {
-   //event.preventDefault();
-  let error = false;
+async function MapPing() {
+ 
   let address = document.querySelector("input[name=Address]").value;
   let city = document.querySelector("input[name=City]").value;
   let state = document.querySelector("#state").value;
@@ -99,10 +98,7 @@ async function MapPing(event) {
   let zip = document.querySelector("input[name=ZipCode]").value;
   const userAddress = `${address}, ${city}, ${ConvertStateAbreviation} ${zip}, USA`;
   const validationResponse = await validateShippingAddress(userAddress);
-  
-  
-  
-  if (validationResponse.isValid ) {
+  if (validationResponse.isValid) {
     const GoogleAddress = validationResponse.formattedAddress;
     const CorrectAddress = await func.formatStreetAddress(userAddress)
     let SimilarPercent = Math.round(await similarity(GoogleAddress,CorrectAddress)*10000)/100;
@@ -112,15 +108,9 @@ async function MapPing(event) {
     }else{
       document.querySelector("#ValidLocation").innerHTML = 'Please check location credentials';
       document.querySelector("#ValidLocation").style.color = "red"
-      error = true;
+      return false;
     }    
     }
-  if (error) {
-    return; 
-  }else{
-    event.target.submit();
-  }
-   
 }
 async function validateEntries(event) {
     let error = false;
@@ -192,6 +182,11 @@ async function validateEntries(event) {
 
     }
     }
+    const locationResults = await MapPing();
+    if(locationResults == false){
+      error = true;
+    }
+    
     if (error) {
       event.preventDefault()
     }else{
