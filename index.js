@@ -1,8 +1,14 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
+require("dotenv").config();
 const unirest = require('unirest');
 const axios = require('axios');
 const mysql = require("mysql");
 const app = express();
+app.use(express.json());
+app.use(cookieParser());
+const router = require("./routes");
+app.use(router);
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
@@ -212,6 +218,9 @@ app.post("/Login", async (req, res) => {
 app.get("/CreateAccount", async (req, res) => {
   res.render("newUser");
 });
+// calls in email verification method
+const { getAuth, createUserWithEmailAndPassword, sendEmailVerification } = require("./config/firebase.js");
+const auth = getAuth();
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;
@@ -241,7 +250,10 @@ app.post("/CreateAccount", async (req, res) => {
       // If the username already exists, it will redirect back to create account page
       return res.render("newUser");
     }
-
+    // sends email verification
+    const userCredential = await createUserWithEmailAndPassword(auth, Email, Password);
+    await sendEmailVerification(userCredential.user);
+    // encrypts password
     const hashedPassword = await bcrypt.hash(Password, 10);
     let query = `INSERT INTO Customers (UserName, FirstName, LastName, Email, Password, Phone) VALUES (?, ?, ?, ?, ?, ?)`;
 
