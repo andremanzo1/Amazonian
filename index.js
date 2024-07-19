@@ -9,6 +9,8 @@ app.use(express.json());
 app.use(cookieParser());
 const router = require("./routes");
 app.use(router);
+const { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut } = require("./config/firebase.js");
+const auth = getAuth();
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
@@ -36,7 +38,8 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/logout", (req, res) => {
+app.get("/logout", async(req, res) => {
+  await signOut(auth);
   req.session.destroy();
   res.redirect("/");
 });
@@ -219,8 +222,6 @@ app.get("/CreateAccount", async (req, res) => {
   res.render("newUser");
 });
 // calls in email verification method
-const { getAuth, createUserWithEmailAndPassword, sendEmailVerification } = require("./config/firebase.js");
-const auth = getAuth();
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;
