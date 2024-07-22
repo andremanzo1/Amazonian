@@ -382,6 +382,17 @@ app.get("/checkUsername", async (req, res) => {
     res.json({ exists: checkResult[0].count > 0 });
  
 });
+// check password if exists
+app.get("/checkPassword", async (req, res) => {
+  const Password = req.query.Password.toLowerCase();
+
+    const check = `SELECT COUNT(*) AS count FROM Customers WHERE Password = ?`;
+    const checkParam = [Password];
+    const checkResult = await executeSQL(check, checkParam);
+
+    res.json({ exists: checkResult[0].count > 0 });
+
+});
 
 //Displays whats inside the cart
 app.get("/viewProducts", async (req, res) => {
