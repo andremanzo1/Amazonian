@@ -13,10 +13,8 @@ async function validation(event) {
   }else{
     const response = await fetch(`/checkUsername?UserName=${encodeURIComponent(user)}`);
     const data = await response.json();
-    const checkPassword = await fetch(`/checkPassword?Password=${encodeURIComponent(pass)}`);
-    const PassData = await checkPassword.json();
-    if (data.exists && !PassData.exists) {
-        document.querySelector("#errorUser").innerHTML = "Please check password";
+    if (!data.exists) {
+        document.querySelector("#errorUser").innerHTML = "Please check Username";
         document.querySelector("#errorUser").style.color = "red";
         error = true;
     }else{
@@ -24,14 +22,21 @@ async function validation(event) {
     }
     }
   
-  //validation for password
-
+  // validation for password
   if (!pass) {
-    document.querySelector("#errorPassword").innerHTML = "Please enter a password"
-    document.querySelector("#errorPassword").style.color = "red"
+    document.querySelector("#errorPassword").innerHTML = "Please enter a password";
+    document.querySelector("#errorPassword").style.color = "red";
     error = true;
-   }else{
-    document.querySelector("#errorPassword").innerHTML = "";
+  } else {
+    const checkPassword = await fetch(`/checkPassword?UserName=${encodeURIComponent(user)}&Password=${encodeURIComponent(pass)}`);
+    const PassData = await checkPassword.json();
+    if (!PassData.exists) {
+      document.querySelector("#errorPassword").innerHTML = "Please check Password";
+      document.querySelector("#errorPassword").style.color = "red";
+      error = true;
+    } else {
+      document.querySelector("#errorPassword").innerHTML = "";
+    }
   }
 
     if (error) {

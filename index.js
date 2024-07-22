@@ -384,14 +384,34 @@ app.get("/checkUsername", async (req, res) => {
 });
 // check password if exists
 app.get("/checkPassword", async (req, res) => {
-  const Password = req.query.Password.toLowerCase();
+  try{
+  let UserName = req.query.UserName;
+  let Password = req.query.Password;
+  let query = `SELECT CustomerID, UserName, Password
+              FROM Customers 
+              WHERE UserName = ?`;
 
-    const check = `SELECT COUNT(*) AS count FROM Customers WHERE Password = ?`;
-    const checkParam = [Password];
-    const checkResult = await executeSQL(check, checkParam);
+  let params = [UserName];
 
-    res.json({ exists: checkResult[0].count > 0 });
+  let result = await executeSQL(query, params);
+  if (result.length > 0) {
+    const hashedPassword = result[0].Password;
 
+    // Compare the hashed password with the password provided by the user
+    const passwordMatch = await bcrypt.compare(Password, hashedPassword);
+
+    if (passwordMatch) {
+      req.session.CustomerID = result[0].CustomerID;
+      req.session.UserName = result[0].UserName;
+      // If passwords match, the user is authenticated
+      res.json({ exists: true });
+    } 
+  }
+  res.json({ exists: false });
+  }catch(error){
+    console.log(error);
+  }
+     
 });
 
 //Displays whats inside the cart
