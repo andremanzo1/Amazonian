@@ -74,8 +74,17 @@ async function validation(event) {
         error = true;
       }else{
       document.querySelector("#error4").innerHTML = "";
-      
     }
+    const EmailCheckresponse = await fetch(`/checkEmail?Email=${encodeURIComponent(email)}`);
+    const Emaildata = await EmailCheckresponse.json();
+      if(Emaildata.exists){
+        document.querySelector("#error4").innerHTML = "This email is already taken"
+        document.querySelector("#error4").style.color = "red"
+        error = true;
+        
+      }else{
+        document.querySelector("#error4").innerHTML = "";
+      }
     }
   //validation for password
       

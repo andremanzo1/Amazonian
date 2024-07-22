@@ -414,6 +414,16 @@ app.get("/checkPassword", async (req, res) => {
      
 });
 
+// check if email taken
+app.get("/checkEmail", async (req, res) => {
+  const email = req.query.Email.toLowerCase();
+  const check = `SELECT COUNT(*) AS count FROM Customers WHERE Email = ?`;
+  const checkParam = [email];
+  const checkResult = await executeSQL(check, checkParam);
+
+  res.json({ exists: checkResult[0].count > 0 });
+});
+
 //Displays whats inside the cart
 app.get("/viewProducts", async (req, res) => {
   let sql = `SELECT * FROM Products WHERE QuantityAvailable > 0 ORDER BY Name`;
