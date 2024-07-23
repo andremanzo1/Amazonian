@@ -1,15 +1,6 @@
 document.querySelector("form").addEventListener("submit", validation)
-async function displayRandomBackground() {
-  let url = `https://api.unsplash.com/photos/random/?client_id=UmG_IJB6rHWGjQYr8-DsaDQlUDAUQImkoxT218vZ5mY&featured=true&query=rainforest&orientation=landscape`
-  let response = await fetch(url)
-  let data = await response.json()
-  let body = document.querySelector("body")
-  body.style.backgroundImage = `url(${data.urls.full})`;
-  body.style.color = "white";
-}
-displayRandomBackground();
 async function validation(event) {
- 
+
     let error = false;
     let user = document.querySelector("input[name=UserName]").value
     let fname = document.querySelector("input[name=FirstName]").value
@@ -83,30 +74,37 @@ async function validation(event) {
         error = true;
       }else{
       document.querySelector("#error4").innerHTML = "";
-      
     }
+    const EmailCheckresponse = await fetch(`/checkEmail?Email=${encodeURIComponent(email)}`);
+    const Emaildata = await EmailCheckresponse.json();
+      if(Emaildata.exists){
+        document.querySelector("#error4").innerHTML = "This email is already taken"
+        document.querySelector("#error4").style.color = "red"
+        error = true;
+        
+      }else{
+        document.querySelector("#error4").innerHTML = "";
+      }
     }
   //validation for password
+      
   if (!pass) {
     document.querySelector("#error5").innerHTML = "Please enter a password"
     document.querySelector("#error5").style.color = "red"
     error = true;
-  }else{
+   }else if(pass){
+    let passregex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    if (!passregex.test(pass)){
+      document.querySelector("#error5").innerHTML = "Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+         document.querySelector("#error5").style.color = "red"
+         error = true;
+    }else{
+      document.querySelector("#error5").innerHTML = "";
+    }
+    
+   }else{
     document.querySelector("#error5").innerHTML = "";
   }
-  //else if (pass) {
-    // let passregex = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/;
-   // if(!passregex.test(pass)){
-    //  document.querySelector("#error5").innerHTML = " 2 uppercase, one special case, two digits, and three lowercase letters"
-   //   document.querySelector("#error5").style.color = "red"
-   //   error = true;
-   // }else{
-    //  document.querySelector("#error5").innerHTML = "";
-    //}
-      
-    //}
-
- 
   
   //validation for phone
   if (!phone) {

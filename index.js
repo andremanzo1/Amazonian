@@ -9,6 +9,8 @@ app.use(express.json());
 app.use(cookieParser());
 const router = require("./routes");
 app.use(router);
+const { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut } = require("./config/firebase.js");
+const auth = getAuth();
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
@@ -36,7 +38,8 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/logout", (req, res) => {
+app.get("/logout", async(req, res) => {
+  await signOut(auth);
   req.session.destroy();
   res.redirect("/");
 });
@@ -219,8 +222,6 @@ app.get("/CreateAccount", async (req, res) => {
   res.render("newUser");
 });
 // calls in email verification method
-const { getAuth, createUserWithEmailAndPassword, sendEmailVerification } = require("./config/firebase.js");
-const auth = getAuth();
 app.post("/CreateAccount", async (req, res) => {
   let UserName = req.body.UserName;
   let FirstName = req.body.FirstName;
@@ -282,7 +283,10 @@ app.post("/CreateAccount", async (req, res) => {
     res.render("newUser");
   }
 });
-
+//Settings for user
+app.get("/UserSettings", async (req, res) => {
+  res.render("UserSettings");
+});
 //UserLocation
 app.get("/UpdateUserLocation",async (req, res) =>{
   let CustomerID = req.session.CustomerID;
@@ -380,6 +384,47 @@ app.get("/checkUsername", async (req, res) => {
 
     res.json({ exists: checkResult[0].count > 0 });
  
+});
+// check password if exists
+app.get("/checkPassword", async (req, res) => {
+  try{
+  let UserName = req.query.UserName;
+  let Password = req.query.Password;
+  let query = `SELECT CustomerID, UserName, Password
+              FROM Customers 
+              WHERE UserName = ?`;
+
+  let params = [UserName];
+
+  let result = await executeSQL(query, params);
+  if (result.length > 0) {
+    const hashedPassword = result[0].Password;
+
+    // Compare the hashed password with the password provided by the user
+    const passwordMatch = await bcrypt.compare(Password, hashedPassword);
+
+    if (passwordMatch) {
+      req.session.CustomerID = result[0].CustomerID;
+      req.session.UserName = result[0].UserName;
+      // If passwords match, the user is authenticated
+      res.json({ exists: true });
+    } 
+  }
+  res.json({ exists: false });
+  }catch(error){
+    console.log(error);
+  }
+     
+});
+
+// check if email taken
+app.get("/checkEmail", async (req, res) => {
+  const email = req.query.Email.toLowerCase();
+  const check = `SELECT COUNT(*) AS count FROM Customers WHERE Email = ?`;
+  const checkParam = [email];
+  const checkResult = await executeSQL(check, checkParam);
+
+  res.json({ exists: checkResult[0].count > 0 });
 });
 
 //Displays whats inside the cart
