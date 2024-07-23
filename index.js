@@ -283,7 +283,10 @@ app.post("/CreateAccount", async (req, res) => {
     res.render("newUser");
   }
 });
-
+//Settings for user
+app.get("/UserSettings", async (req, res) => {
+  res.render("UserSettings");
+});
 //UserLocation
 app.get("/UpdateUserLocation",async (req, res) =>{
   let CustomerID = req.session.CustomerID;
