@@ -311,9 +311,6 @@ app.post("/UpdateUserLocation", async (req, res) =>{
   await executeSQL(updateLocation, [ Address, City, State, ZipCode, customerID]);
   res.redirect('/UpdateUserLocation');
 });
-//settings option
-
-
 
 // record of date and time
 let token = '';

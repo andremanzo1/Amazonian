@@ -1,8 +1,94 @@
 <%-  include("partials/head.ejs")    %>
 <%- include("partials/navUserSide.ejs") %>
-  <body>
+  <body id = "body">
 
-     <a class="nav-link active" aria-current="page" href="/UpdateUserLocation">Address</a>
+     <!-- <a class="nav-link active" aria-current="page" href="/UpdateUserLocation">Address</a> -->
+      <div class="container p-0">
+          
+          <div class="row">
+              <div class="col-md-5 col-xl-4">
+
+                  <div class="card">
+                      <div class="card-header">
+                          <h5 class="card-title mb-0">User Settings</h5>
+                      </div>
+
+                      <div class="list-group list-group-flush" role="tablist">
+                          <a class="list-group-item list-group-item-action" data-toggle="list" href="#account" role="tab">
+                            Account
+                          </a>
+                          <a class="list-group-item list-group-item-action" data-toggle="list" href="#password" role="tab">
+                            Password
+                          </a>
+                          <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                            Privacy and safety
+                          </a>
+                          <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                            Email notifications
+                          </a>
+                          <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                            Web notifications
+                          </a>
+                          <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                            Widgets
+                          </a>
+                          <a class="list-group-item list-group-item-action" data-toggle="list" href ="#location" data-url="/UpdateUserLocation" role="tab">
+                            Location
+                          </a>
+                          <a class="list-group-item list-group-item-action" data-toggle="list" href="#" role="tab">
+                            Delete account
+                          </a>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-md-7 col-xl-8">
+                  <div class="tab-content">
+                      
+                      <div class="tab-pane fade" id="location" role="tabpanel">
+                          <!-- Location content will be loaded here -->
+                          
+                        </div>
+                      
+                  </div>
+              </div>
+          </div>
+
+      </div>
+      <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            // Trigger click event on the active tab to load content initially
+            const activeTab = document.querySelector('.list-group-item.active');
+            if (activeTab) {
+              activeTab.click();
+            }
+
+            const tabs = document.querySelectorAll('[data-toggle="list"]');
+
+            tabs.forEach(tab => {
+              tab.addEventListener('click', function (event) {
+                event.preventDefault();
+                const url = this.getAttribute('data-url');
+                const target = this.getAttribute('href');
+
+                if (url) {
+                  fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                      document.querySelector(target).innerHTML = html;
+                      // Add 'show' and 'active' classes to the target tab pane
+                      document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('show', 'active');
+                      });
+                      document.querySelector(target).classList.add('show', 'active');
+                    })
+                    .catch(error => console.error('Error fetching content:', error));
+                }
+              });
+            });
+          });
+      </script>
    
   </body>
   </html>
+    
