@@ -1,6 +1,31 @@
-document.querySelector("form").addEventListener("submit", validateEntries)
+document.getElementById('updateLocationForm').addEventListener('submit', async function(e) {
+  // Using Ajax to update 
+    e.preventDefault(); // Prevent the default form submission
+
+    await validateEntries(); // Validate the entries
+    
+    const formData = new FormData(this); // Get form data
+    const data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    fetch('/UpdateUserLocation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            initMap();
+        } 
+    })
+    .catch(error => console.error('Error:', error));
+});
 document.querySelector("#state").addEventListener("change", populateStates)
-document.querySelector("form").addEventListener("submit", MapPing)
 let statesPopulated = false;
 async function populateStates() {
   if (statesPopulated) return;
@@ -42,7 +67,7 @@ async function loadGoogleMap(){
 }
 
 let map;
-
+// loads the map and loads it up to date
 async function initMap() {
   await loadGoogleMap();
   const locationResults = await MapPing();
@@ -104,6 +129,7 @@ async function MapPing() {
     let SimilarPercent = Math.round(await similarity(GoogleAddress,CorrectAddress)*10000)/100;
     if ( SimilarPercent > 91 ){
       const location = validationResponse.location;
+      document.querySelector("#ValidLocation").innerHTML = '';
       return { lat: location.lat(), lng: location.lng() };
     }else{
       document.querySelector("#ValidLocation").innerHTML = 'Please check location credentials';
@@ -118,9 +144,7 @@ async function validateEntries(event) {
     let city = document.querySelector("input[name=City]").value
     let state = document.querySelector("#state").value
     let zip = document.querySelector("input[name=ZipCode]").value
-    error = false;
-   event.preventDefault();
-
+   
   // validation for address
   
    if (!address) {
@@ -186,13 +210,6 @@ async function validateEntries(event) {
     if(locationResults == false){
       error = true;
     }
-    
-    if (error) {
-      event.preventDefault()
-    }else{
-      event.target.submit();
-    }
-    error = false;
 }
 //converts the state name to its abreviation
 async function abbrState(input, to){

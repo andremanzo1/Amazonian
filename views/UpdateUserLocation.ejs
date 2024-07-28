@@ -1,9 +1,8 @@
-<%-  include("partials/head.ejs")    %>
-<%- include("partials/navUserSide.ejs") %>
+ <%-  include("partials/head.ejs")    %> 
   <body>
     
       <h1 id = "createtitle">Update Locoation</h1>
-    <form action="/UpdateUserLocation" method="POST" autocomplete="off"id = "createtitle">
+    <form id="updateLocationForm"  autocomplete="off">
       <input name="CustomerID" type="hidden" value = "<%=LocationInfo.CustomerID%>">
       <br>
       Address:
@@ -33,7 +32,7 @@
       <br>
 
       <h1 id = "ValidLocation"></h1>
-      <button >Save Location</button>
+      <button>Save Location</button>
 
     </form>
 
