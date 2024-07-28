@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 require("dotenv").config();
 const unirest = require('unirest');
@@ -6,6 +7,7 @@ const axios = require('axios');
 const mysql = require("mysql");
 const app = express();
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(cookieParser());
 const router = require("./routes");
 app.use(router);
@@ -309,7 +311,7 @@ app.post("/UpdateUserLocation", async (req, res) =>{
   let ZipCode = req.body.ZipCode;
   let updateLocation = `UPDATE Location SET Address = ?, City = ?, State = ?,ZipCode=? WHERE CustomerID = ?`;
   await executeSQL(updateLocation, [ Address, City, State, ZipCode, customerID]);
-  res.redirect('/UpdateUserLocation');
+  res.json({ success: true });
 });
 
 // record of date and time
