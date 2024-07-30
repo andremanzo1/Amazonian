@@ -1,7 +1,7 @@
 <%-  include("partials/head.ejs")    %>
 <%- include("partials/navUserSide.ejs") %>
   <body>
-    <h1>List of Products</h1>
+    <!-- <h1>List of Products</h1>
 
     <% for (let i of productList) {%>
       
@@ -33,5 +33,32 @@
         <br><br>
       <%} %>
       <!-- Your content goes here -->
+    <% for (let i of productList) {%>
+      <div class="listing-section">
+      
+      <div class="product">
+        <div class="image-box">
+          <img class="images" src = "<%= i.Image %>" alt = "productimage" ></img>
+        </div>
+        <div class="text-box">
+          <h2 class="item"><%= i.Name%></h2>
+          <h3 class="price">$<%= i.Price%></h3>
+          <p class="description"><%=i.Description%></p>
+          <p class = "category">Category: <%= i.Category%></p>
+          <p class = "supplier">Supplier: <%=i.Supplier%></p>
+          <label class="item-2-quantity">Quantity:<%= i.QuantityAvailable %></label>
+          <form action="/addToCart" method="post">
+        <input type="hidden" name="ProductID" value="<%= i.ProductID %>">
+        <input type="hidden" name="CustomerID" value="<%= i.CustomerID %>">
+        <input type="number" class = "Quantity" name="Quantity" value="1" min="1" max="<%= i.QuantityAvailable %>">
+        <button class = "CartBttn"type="submit">Add to Cart</button>
+        </form>
+        </div>
+      </div>
+      
+      </div>
+      <%} %>
+    
+
   </body>
   </html>
