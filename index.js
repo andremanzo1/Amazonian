@@ -483,7 +483,7 @@ app.post("/addToCart", async (req, res) => {
       let addCartSql = `INSERT INTO ShoppingCart (CustomerID, ProductID, Quantity) VALUES (?, ?, ?)`;
       await executeSQL(addCartSql, [customerID, productID, quantity]);
     }
-    res.redirect("/viewProducts");
+    res.json({ success: true });
   }
 });
 
