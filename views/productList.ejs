@@ -4,9 +4,30 @@
     <h1>List of Products</h1>
 
     <% for (let i of productList) {%>
-      <a href="/updateProduct?ProductID= <%= i.ProductID%>"> Update </a>
+      
+      
       <br>
-      <%= i.Name%><br> Description:<%=i.Description%> <br>Price:<%= i.Price%> <br>Quantity:<%= i.QuantityAvailable %> <br>Category:<%= i.Category%><br> Supplier:<%=i.Supplier%> <br><img class = "img" src = "<%= i.Image %>" alt = "productimage"> <br><a href="/DeleteProduct?ProductID= <%= i.ProductID%>"> Delete Product </a><br><br>
+      <div class="listing-section">
+
+        <div class="product">
+          <div class="image-box">
+            <img class="images" src = "<%= i.Image %>" alt = "productimage" ></img>
+          </div>
+          <div class="text-box">
+            <h2 class="item"><%= i.Name%></h2>
+            <h3 class="price">$<%= i.Price%></h3>
+            <p class="description"><%=i.Description%></p>
+            <p class = "category">Category: <%= i.Category%></p>
+            <p class = "supplier">Supplier: <%=i.Supplier%></p>
+            <label class="item-2-quantity">Quantity:<%= i.QuantityAvailable %></label>
+            <a class="btn btn-danger" href="/DeleteProduct?ProductID= <%= i.ProductID%>"> Delete Product </a>
+            <br>
+            <a class="btn btn-primary" href="/updateProduct?ProductID= <%= i.ProductID%>"> Update </a>
+          </div>
+        </div>
+
+        </div>
+        
       <%} %>
         <br>
       <!-- Your content goes here -->

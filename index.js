@@ -106,7 +106,6 @@ app.post("/addProduct", async (req, res) => {
 //Display list products from the admin side
 app.get("/productList", async (req, res) => {
   let sql = `SELECT * FROM Products ORDER BY Name`;
-
   let rows = await executeSQL(sql);
   res.render("productList", { productList: rows });
 });
