@@ -1,38 +1,6 @@
 <%-  include("partials/head.ejs")    %>
 <%- include("partials/navUserSide.ejs") %>
   <body>
-    <!-- <h1>List of Products</h1>
-
-    <% for (let i of productList) {%>
-      
-      Name:
-      <%= i.Name%>
-        <br>
-      Description:
-      <%=i.Description%>
-        <br>
-      Price:  
-      $<%= i.Price%>
-        <br>
-      Quantity:
-      <%= i.QuantityAvailable %>
-        <br>
-      Category:
-      <%= i.Category%> 
-        <br>
-      Supplier:
-      <%=i.Supplier%>
-        <br>
-      <img class = "img" src = "<%= i.Image %>" alt = "productimage">
-        <form action="/addToCart" method="post">
-        <input type="hidden" name="ProductID" value="<%= i.ProductID %>">
-        <input type="hidden" name="CustomerID" value="<%= i.CustomerID %>">
-        <input type="number" name="Quantity" value="1" min="1" max="<%= i.QuantityAvailable %>">
-        <button type="submit">Add to Cart</button>
-        </form>
-        <br><br>
-      <%} %>
-      <!-- Your content goes here -->
     <% for (let i of productList) {%>
       <div class="listing-section">
       
