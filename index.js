@@ -1,7 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-require("dotenv").config();
 const unirest = require('unirest');
 const axios = require('axios');
 const mysql = require("mysql");
@@ -17,6 +17,7 @@ const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
 const { error } = require("console");
+const googleLoginRoute = require("./routes/googleLoginRoute");
 const pool = dbConnection();
 const sessionStore = new MySQLStore({}, pool);
 app.set("trust proxy", 1); // trust first proxy
@@ -29,7 +30,6 @@ app.use(
     cookie: { secure: false },
   }),
 );
-
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 //to parse Form data sent using POST method
@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render("LoginUser");
 });
 
 app.get("/logout", async(req, res) => {
@@ -45,7 +45,8 @@ app.get("/logout", async(req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
-
+//google login
+app.use("/googleLogin", googleLoginRoute);
 //Userhome
 app.get("/UserHome", (req, res) => {
   let username = req.session.UserName;

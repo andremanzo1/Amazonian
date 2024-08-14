@@ -4,12 +4,12 @@ const {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   signOut, 
-  sendEmailVerification,
-  sendPasswordResetEmail
+  sendEmailVerification, 
+  sendPasswordResetEmail 
  } = require('../config/firebase');
 const auth = getAuth();
-
 class FirebaseAuthController {
+
   registerUser(req, res) {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -60,6 +60,7 @@ class FirebaseAuthController {
             const errorMessage = error.message || "An error occurred while logging in";
             res.status(500).json({ error: errorMessage });
         });
+
   }
   logoutUser(req, res) {
       signOut(auth)
@@ -87,7 +88,9 @@ class FirebaseAuthController {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
       });
+
   }
+
  
 }
 
