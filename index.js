@@ -1,7 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-require("dotenv").config();
 const unirest = require('unirest');
 const axios = require('axios');
 const mysql = require("mysql");
@@ -29,7 +29,6 @@ app.use(
     cookie: { secure: false },
   }),
 );
-
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 //to parse Form data sent using POST method
@@ -37,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render("LoginUser");
 });
 
 app.get("/logout", async(req, res) => {
