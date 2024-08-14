@@ -17,6 +17,7 @@ const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
 const { error } = require("console");
+const googleLoginRoute = require("./routes/googleLoginRoute");
 const pool = dbConnection();
 const sessionStore = new MySQLStore({}, pool);
 app.set("trust proxy", 1); // trust first proxy
@@ -44,7 +45,8 @@ app.get("/logout", async(req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
-
+//google login
+app.use("/googleLogin", googleLoginRoute);
 //Userhome
 app.get("/UserHome", (req, res) => {
   let username = req.session.UserName;
