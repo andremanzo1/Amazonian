@@ -367,10 +367,23 @@ app.get("/States/US", async (req, res) => {
   });
 });
 
-//sends google encrypted api key to frontend
+//sends google map  encrypted api key to frontend
 app.get("/googleAPI", (req, res) =>{
   let googleAPI = process.env['googleAPI'];
   res.json({key: googleAPI});
+});
+
+// sends firebase encrypted api key to frontend
+app.get("/firebaseAPI", (req, res) =>{
+  let apiKey = process.env.FIREBASE_API_KEY;
+  let authDomain = process.env.FIREBASE_AUTH_DOMAIN;
+  let projectId= process.env.FIREBASE_PROJECT_ID;
+  let storageBucket = process.env.FIREBASE_STORAGE_BUCKET;
+  let messagingSenderId = process.env.FIREBASE_MESSAGING_SENDER_ID;
+  let appId = process.env.FIREBASE_APP_ID;
+  let measurementId = process.env.FIREBASE_MEASUREMENT_ID;
+  res.json({key: apiKey, authDomain, projectId, storageBucket, messagingSenderId,  appId, measurementId});
+  
 });
 
 // check if username taken
