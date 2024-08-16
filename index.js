@@ -1,3 +1,4 @@
+// index.js
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require('body-parser');
@@ -45,10 +46,36 @@ app.get("/logout", async(req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
-//google login
+//google login button route
 app.use("/googleLogin", googleLoginRoute);
+// GHome handler
+app.get("/GHome", async (req, res) =>{
+  const email = req.query.email;
+  try{
+  const check = `SELECT COUNT(*) AS count FROM Customers WHERE Email = ?`;
+  const checkParam = [email];
+  const checkResult = await executeSQL(check, checkParam);
+    // checks if a the email exists in the database if it does it will sign 
+    //in the user through the existing account
+  if(checkResult[0].count > 0 == 1){
+    let query = `SELECT CustomerID, Email, UserName
+                FROM Customers 
+                WHERE Email = ?`;
+    let params = [email];
+    let rows = await executeSQL(query, params);
+    req.session.CustomerID = rows[0].CustomerID;
+    req.session.UserName = rows[0].UserName;
+    return res.redirect(
+      "/UserHome?username=" + encodeURIComponent(rows[0].UserName),
+    );
+   } 
+    
+  }catch(error){
+    console.log(error);
+  }
+});
 //Userhome
-app.get("/UserHome", (req, res) => {
+app.get("/UserHome", async (req, res) => {
   let username = req.session.UserName;
   res.render("Userhome", { username: username });
 });
@@ -169,7 +196,7 @@ app.get("/DeleteProduct", async (req, res) => {
 app.get("/Login", (req, res) => {
   res.render("LoginUser");
 });
-
+//////
 app.post("/Login", async (req, res) => {
   let UserName = req.body.UserName;
   let Password = req.body.Password;

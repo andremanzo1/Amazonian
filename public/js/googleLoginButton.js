@@ -1,3 +1,4 @@
+//googleLoginButton.js
 // Import Firebase modules
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js';
   import { getAuth, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js';
@@ -37,12 +38,12 @@ document.getElementById('google-btn-container').addEventListener('click', async 
                   })
                   .then(response => response.json())
                   .then(data => {
-                      // if (data.message === 'Successfully authenticated') {
-                      //     // Redirect on the client side
-                      //     window.location.href = `/home?email=${encodeURIComponent(data.email)}`;
-                      // } else {
-                      //     console.error('Authentication failed:', data.error);
-                      // }
+                      if (data.message === 'Successfully authenticated') {
+                          // Redirect on the client side
+                          window.location.href = `/GHome?email=${encodeURIComponent(data.email)}`;
+                      } else {
+                          console.error('Authentication failed:', data.error);
+                      }
                   })
                   .catch((error) => {
                       console.error('Error:', error);
