@@ -1,3 +1,4 @@
+// index.js
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require('body-parser');
@@ -17,6 +18,7 @@ const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
 const { error } = require("console");
+const { generateFromEmail, generateUsername } = require("unique-username-generator");
 const googleLoginRoute = require("./routes/googleLoginRoute");
 const pool = dbConnection();
 const sessionStore = new MySQLStore({}, pool);
@@ -45,10 +47,54 @@ app.get("/logout", async(req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
-//google login
+//google login button route
 app.use("/googleLogin", googleLoginRoute);
+// GHome handler
+app.get("/GHome", async (req, res) =>{
+  const email = req.query.email;
+  try{
+  const check = `SELECT COUNT(*) AS count FROM Customers WHERE Email = ?`;
+  const checkParam = [email];
+  const checkResult = await executeSQL(check, checkParam);
+    // checks if a the email exists in the database if it does it will sign 
+    //in the user through the existing account
+  if(checkResult[0].count > 0 == 1){
+    let query = `SELECT CustomerID, Email, UserName
+                FROM Customers 
+                WHERE Email = ?`;
+    let params = [email];
+    let rows = await executeSQL(query, params);
+    req.session.CustomerID = rows[0].CustomerID;
+    req.session.UserName = rows[0].UserName;
+    return res.redirect(
+      "/UserHome?username=" + encodeURIComponent(rows[0].UserName),
+    );
+   }else{
+    let UserName = generateUsername();
+    let query = `INSERT INTO Customers (UserName, Email) VALUES (?, ?)`;
+
+    let params = [
+      UserName,
+      email
+    ];
+
+    let result = await executeSQL(query, params);
+    //automatically insert a empty loction for the user, check back for state
+    let insertLocation = `INSERT INTO Location (CustomerID, Address, City, ZipCode) VALUES (?, ?, ?, ?)`;
+    let locationParams = [result.insertId, '', '', ''];
+    await executeSQL(insertLocation, locationParams);
+    // If the account is successfully created, render the Userhome view
+    req.session.CustomerID = result.insertId;
+    req.session.UserName = UserName;
+    res.redirect("/UserHome?username=" + encodeURIComponent(UserName));
+   } 
+    
+  }catch(error){
+    console.log(error);
+  }
+});
 //Userhome
-app.get("/UserHome", (req, res) => {
+app.get("/UserHome", async (req, res) => {
   let username = req.session.UserName;
   res.render("Userhome", { username: username });
 });
@@ -367,10 +413,23 @@ app.get("/States/US", async (req, res) => {
   });
 });
 
-//sends google encrypted api key to frontend
+//sends google map  encrypted api key to frontend
 app.get("/googleAPI", (req, res) =>{
   let googleAPI = process.env['googleAPI'];
   res.json({key: googleAPI});
+});
+
+// sends firebase encrypted api key to frontend
+app.get("/firebaseAPI", (req, res) =>{
+  let apiKey = process.env.FIREBASE_API_KEY;
+  let authDomain = process.env.FIREBASE_AUTH_DOMAIN;
+  let projectId= process.env.FIREBASE_PROJECT_ID;
+  let storageBucket = process.env.FIREBASE_STORAGE_BUCKET;
+  let messagingSenderId = process.env.FIREBASE_MESSAGING_SENDER_ID;
+  let appId = process.env.FIREBASE_APP_ID;
+  let measurementId = process.env.FIREBASE_MEASUREMENT_ID;
+  res.json({key: apiKey, authDomain, projectId, storageBucket, messagingSenderId,  appId, measurementId});
+  
 });
 
 // check if username taken
