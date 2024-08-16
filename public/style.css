@@ -31,6 +31,21 @@ html, body {
   user-select: none;
   margin: .5rem 0;
 }
+.google-icon {
+  width: 48px;
+  height: 48px;
+  text-align: center;
+  display: block;
+  margin-top: 1px;
+  margin-left: 1px;
+  float: left;
+  background-color: rgb(255, 255, 255);
+  border-radius: 1px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .img{
   width:25%;
