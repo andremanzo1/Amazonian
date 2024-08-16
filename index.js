@@ -18,6 +18,7 @@ const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const bcrypt = require("bcrypt");
 const { error } = require("console");
+const { generateFromEmail, generateUsername } = require("unique-username-generator");
 const googleLoginRoute = require("./routes/googleLoginRoute");
 const pool = dbConnection();
 const sessionStore = new MySQLStore({}, pool);
@@ -68,6 +69,24 @@ app.get("/GHome", async (req, res) =>{
     return res.redirect(
       "/UserHome?username=" + encodeURIComponent(rows[0].UserName),
     );
+   }else{
+    let UserName = generateUsername();
+    let query = `INSERT INTO Customers (UserName, Email) VALUES (?, ?)`;
+
+    let params = [
+      UserName,
+      email
+    ];
+
+    let result = await executeSQL(query, params);
+    //automatically insert a empty loction for the user, check back for state
+    let insertLocation = `INSERT INTO Location (CustomerID, Address, City, ZipCode) VALUES (?, ?, ?, ?)`;
+    let locationParams = [result.insertId, '', '', ''];
+    await executeSQL(insertLocation, locationParams);
+    // If the account is successfully created, render the Userhome view
+    req.session.CustomerID = result.insertId;
+    req.session.UserName = UserName;
+    res.redirect("/UserHome?username=" + encodeURIComponent(UserName));
    } 
     
   }catch(error){
@@ -196,7 +215,7 @@ app.get("/DeleteProduct", async (req, res) => {
 app.get("/Login", (req, res) => {
   res.render("LoginUser");
 });
-//////
+
 app.post("/Login", async (req, res) => {
   let UserName = req.body.UserName;
   let Password = req.body.Password;
