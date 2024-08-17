@@ -46,7 +46,21 @@ html, body {
   align-items: center;
   justify-content: center;
 }
-
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+.custom-search-width {
+    width: 1300px; /* Set your desired width here */
+   
+  }
+.custom-option-layout{
+  position: relative;
+   width: 100px;
+}
 .img{
   width:25%;
   height:25%;
