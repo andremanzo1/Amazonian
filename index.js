@@ -484,6 +484,15 @@ app.get("/checkEmail", async (req, res) => {
 
   res.json({ exists: checkResult[0].count > 0 });
 });
+// search for products
+app.get("/SearchProduct", async(req,res)=>{
+  let keyword = req.query.keyword;
+  let query = `SELECT *
+  FROM Products WHERE Name LIKE ?`;
+  let params = ["%"+keyword+"%"];
+  let rows = await executeSQL(query, params);
+  res.render("viewProducts", { productList: rows });
+});
 
 //Displays whats inside the cart
 app.get("/viewProducts", async (req, res) => {
