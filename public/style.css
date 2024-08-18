@@ -12,6 +12,23 @@ html, body {
   margin: 0;
   padding: 0;
 }
+.img-magnifier-container {
+  position: relative;
+  display: inline-block; /* Centering container */
+}
+
+.img-magnifier-glass {
+  position: absolute;
+  border: 3px solid #000;
+  border-radius: 50%;
+  cursor: none;
+  width: 100px;
+  height: 100px;
+  z-index: 10;
+  background-color: transparent;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
 
 .google-btn-container {
   background-color: rgb(66, 133, 244);

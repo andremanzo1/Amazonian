@@ -494,13 +494,21 @@ app.get("/SearchProduct", async(req,res)=>{
   res.render("viewProducts", { productList: rows });
 });
 
-//Displays whats inside the cart
+//Displays the products available
 app.get("/viewProducts", async (req, res) => {
   let sql = `SELECT * FROM Products WHERE QuantityAvailable > 0 ORDER BY Name`;
   let rows = await executeSQL(sql);
   res.render("viewProducts", { productList: rows });
 });
+//View the product in close up image
+app.get("/viewCloseUp", async (req,res)=>{
+  let productID = req.query.ProductID;
+  let sql = `SELECT * FROM Products WHERE ProductID = ?`;
+  let rows = await executeSQL(sql, [productID]);
+  res.render("viewCloseUp",  {productInfo: rows[0] });
+});
 
+//Displays whats inside the cart
 app.get("/viewCart", async (req, res) => {
   let customerID = req.session.CustomerID;
   let sql = `SELECT Products.Name, Products.Description, Products.Price, ShoppingCart.Quantity, Products.ProductID
