@@ -4,7 +4,21 @@
   <div class="img-magnifier-container">
     <img id="myimage" src="<%= productInfo.Image %>" width="1200" height="600"alt="productimage" >
   </div>
-
+  <div class="text-box">
+    <h2 class="item"><%= productInfo.Name%></h2>
+    <h3 class="price">$<%= productInfo.Price%></h3>
+    <p class="description"><%=productInfo.Description%></p>
+    <p class = "category">Category: <%= productInfo.Category%></p>
+    <p class = "supplier">Supplier: <%=productInfo.Supplier%></p>
+    <label class="item-2-quantity">Quantity:<%= productInfo.QuantityAvailable %></label>
+    <form class= "addToCart">
+  <input type="hidden" name="ProductID" value="<%= productInfo.ProductID %>">
+  <input type="hidden" name="CustomerID" value="<%= productInfo.CustomerID %>">
+  <input type="number" class = "Quantity" name="Quantity" value="1" min="1" max="<%= productInfo.QuantityAvailable %>">
+  <button class = "CartBttn"type="submit">Add to Cart</button>
+  </form>
+  </div>
+  <script src="/js/add_to_cart.js"> </script>
   <script src="/js/zoomIn.js"></script>
 </body>
 </html>
