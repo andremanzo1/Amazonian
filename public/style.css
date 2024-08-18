@@ -12,6 +12,23 @@ html, body {
   margin: 0;
   padding: 0;
 }
+.img-magnifier-container {
+  position: relative;
+  display: inline-block; /* Centering container */
+}
+
+.img-magnifier-glass {
+  position: absolute;
+  border: 3px solid #000;
+  border-radius: 50%;
+  cursor: none;
+  width: 100px;
+  height: 100px;
+  z-index: 10;
+  background-color: transparent;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
 
 .google-btn-container {
   background-color: rgb(66, 133, 244);
@@ -46,7 +63,21 @@ html, body {
   align-items: center;
   justify-content: center;
 }
-
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+.custom-search-width {
+    width: 1300px; /* Set your desired width here */
+   
+  }
+.custom-option-layout{
+  position: relative;
+   width: 100px;
+}
 .img{
   width:25%;
   height:25%;
