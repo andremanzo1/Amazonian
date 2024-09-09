@@ -10,7 +10,7 @@ Project has been enhanced by the lead developer and is currntly being updated.
 * This project is orginally developed in replit, keep in mind using other ide may require you to install more packages
 
 ### Installation 
-These are all the npm packages you need to install
+These are all the npm packages you need to install:
 npm install dotenv express body-parser cookie-parser unirest axios mysql
 firebase express-session
 express-mysql-session 
