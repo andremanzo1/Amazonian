@@ -6,4 +6,11 @@ Project has been enhanced by the lead developer and is currntly being updated.
 ## Getting Started 
 
 ### Prerequistes 
-*
+* Nodejs, javascript, sql, express, ejs, google api, etc.
+* This project is orginally developed in replit, keep in mind using other ide may require you to install more packages
+
+### Installation 
+These are all the npm packages you need to install
+npm install dotenv express body-parser cookie-parser unirest axios mysql firebase express-session express-mysql-session bcrypt unique-username-generator ejs
+Create your own sql database
+
