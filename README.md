@@ -15,5 +15,7 @@ npm install dotenv express body-parser cookie-parser unirest axios mysql
 firebase express-session
 express-mysql-session 
 bcrypt unique-username-generator ejs
-You will need to create your own databse or request the admin for the databses credentials 
+--------
+You will need to create your own 
+databse or request the admin for the databses credentials 
 
