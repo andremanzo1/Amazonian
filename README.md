@@ -11,6 +11,9 @@ Project has been enhanced by the lead developer and is currntly being updated.
 
 ### Installation 
 These are all the npm packages you need to install
-npm install dotenv express body-parser cookie-parser unirest axios mysql firebase express-session express-mysql-session bcrypt unique-username-generator ejs
-Create your own sql database
+npm install dotenv express body-parser cookie-parser unirest axios mysql
+firebase express-session
+express-mysql-session 
+bcrypt unique-username-generator ejs
+You will need to create your own databse or request the admin for the databses credentials 
 
